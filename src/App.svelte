@@ -1,7 +1,12 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
   import { SEED_PEOPLE, type Person } from "./lib/data";
-  import { computeFitGrid, findSweetWindows, findBestPartial } from "./lib/sweetSpot";
+  import {
+    computeFitGrid,
+    findSweetWindows,
+    findExtendedWindows,
+    findBestPartial,
+  } from "./lib/sweetSpot";
   import PersonCard from "./lib/PersonCard.svelte";
   import AddPerson from "./lib/AddPerson.svelte";
   import SweetSpotList from "./lib/SweetSpotList.svelte";
@@ -40,6 +45,10 @@
   $: sweetWindows = (() => {
     const full = findSweetWindows(grid, 0.5);
     if (full.length) return full;
+    // No fully-shared working hours — try a "stretch" window where everyone is
+    // at least within their early/evening band (e.g. a 9pm/9am bridge meeting).
+    const extended = findExtendedWindows(grid, 0.5);
+    if (extended.length) return extended.slice(0, 3);
     return findBestPartial(grid).slice(0, 3);
   })();
 
@@ -99,7 +108,7 @@
   <div class="topbar">
     <div class="brand">
       <span class="brand-mark"></span>
-      <span class="brand-name">easy-timezones</span>
+      <span class="brand-name">Time Zones</span>
     </div>
     <div class="topbar-actions">
       <span>Click any cell to set the meeting</span>

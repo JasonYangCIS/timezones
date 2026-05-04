@@ -891,7 +891,11 @@ input, select {
 .add-person-icon {
   position: absolute;
   left: 11px;
-  top: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--text-3);
   pointer-events: none;
 }
@@ -921,8 +925,30 @@ input, select {
 }
 .suggest-item:last-child { border-bottom: none; }
 .suggest-item:hover, .suggest-item.active { background: var(--surface-2); }
+.suggest-text { min-width: 0; flex: 1; }
 .suggest-name { font-size: 17px; }
 .suggest-zone { font-size: 15px; color: var(--text-3); }
+.suggest-tz {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.suggest-tz-abbr {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  background: var(--surface-3);
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+.suggest-tz-offset {
+  font-size: 11px;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
 
 /* Working hours editor */
 .work-hours {
@@ -1520,23 +1546,39 @@ input, select {
 }
 
 .wtb-selection {
+  --wtb-sel-color: #4f46e5;
   position: absolute;
-  top: 6px;
-  bottom: 6px;
-  border: 2px solid var(--text);
-  border-radius: 12px;
-  background: transparent;
+  top: 4px;
+  bottom: 4px;
+  border: 2px solid var(--wtb-sel-color);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg,
+      color-mix(in oklab, var(--wtb-sel-color), transparent 82%),
+      color-mix(in oklab, var(--wtb-sel-color), transparent 92%));
   pointer-events: auto;
   cursor: grab;
   box-shadow:
-    0 0 0 4px var(--surface),
-    0 6px 20px -4px color-mix(in oklab, var(--text), transparent 70%);
+    0 0 0 3px var(--surface),
+    0 0 0 4px color-mix(in oklab, var(--wtb-sel-color), transparent 70%),
+    0 10px 28px -8px color-mix(in oklab, var(--wtb-sel-color), transparent 45%),
+    inset 0 1px 0 color-mix(in oklab, #ffffff, transparent 70%);
   transition: left 220ms cubic-bezier(0.22, 1, 0.36, 1), width 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.wtb-selection:hover {
+  box-shadow:
+    0 0 0 3px var(--surface),
+    0 0 0 5px color-mix(in oklab, var(--wtb-sel-color), transparent 55%),
+    0 14px 32px -8px color-mix(in oklab, var(--wtb-sel-color), transparent 35%),
+    inset 0 1px 0 color-mix(in oklab, #ffffff, transparent 65%);
 }
 .wtb-selection:active {
   cursor: grabbing;
   /* During an active drag, kill the tween so it tracks the cursor */
   transition: none;
+}
+[data-theme="dark"] .wtb-selection {
+  --wtb-sel-color: #818cf8;
 }
 
 /* Track wrappers that match the cell region exactly. The row's cells use
@@ -1617,11 +1659,11 @@ input, select {
 }
 .wtb-selection-handle span {
   display: block;
-  width: 14px;
+  width: 16px;
   height: 2px;
   border-radius: 2px;
-  background: var(--text);
-  opacity: 0.6;
+  background: var(--wtb-sel-color, #4f46e5);
+  opacity: 0.95;
 }
 
 /* Legend swatches for new bands */
@@ -1635,9 +1677,32 @@ input, select {
   .wtb-card { --wtb-info-w: 180px; --wtb-cell-min: 38px; }
 }
 @media (max-width: 860px) {
-  .wtb-card { --wtb-info-w: 150px; --wtb-cell-min: 32px; --wtb-cell-h: 46px; }
+  .wtb-card {
+    --wtb-info-w: 140px;
+    --wtb-cell-min: 44px;
+    --wtb-cell-h: 46px;
+    /* Allow the 24-hour grid to extend beyond the viewport and scroll. */
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+  }
+  .wtb-day-strip-row,
+  .wtb-rows {
+    /* Info column + 24 cells at the min width — guarantees the grid stays
+       legible and forces horizontal scroll on narrow screens. */
+    min-width: calc(var(--wtb-info-w) + (var(--wtb-cell-min) * 24) + 28px);
+  }
   .wtb-cell-main { font-size: 16px; }
   .wtb-cell-sub { font-size: 10px; }
+}
+@media (max-width: 540px) {
+  .wtb-card {
+    --wtb-info-w: 116px;
+    --wtb-cell-min: 40px;
+    --wtb-cell-h: 44px;
+  }
+  .wtb-cell-main { font-size: 15px; }
 }
 
 
