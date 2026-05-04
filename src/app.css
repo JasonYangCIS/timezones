@@ -1547,7 +1547,11 @@ input, select {
 .wtb-now-track {
   position: relative;
   height: 100%;
-  padding: 8px 10px;
+  /* Horizontal margin (instead of padding) so absolutely-positioned children
+     compute left/width percentages against the cells' content area, which is
+     itself inset 10px by .wtb-row-cells padding. */
+  padding: 8px 0;
+  margin: 0 10px;
   pointer-events: none;
 }
 
