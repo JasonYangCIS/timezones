@@ -1,12 +1,12 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import type { Person } from "./data";
+  import type { Zone } from "./data";
   import { partsInZone, offsetMinutes, formatHour, formatDateLong, formatDateShort } from "./tz";
   import { fitForRange, durationLabel } from "./sweetSpot";
   import Avatar from "./Avatar.svelte";
   import Chevron from "./icons/Chevron.svelte";
 
-  export let people: Person[] = [];
+  export let zones: Zone[] = [];
   export let anchorDate: Date;
   export let selectedStartUTC = 0;
   export let durationH = 1;
@@ -16,8 +16,8 @@
 
   let detailsOpen = false;
 
-  $: anchor = people[0];
-  $: selectionFit = fitForRange(people, anchorDate, selectedStartUTC, durationH);
+  $: anchor = zones[0];
+  $: selectionFit = fitForRange(zones, anchorDate, selectedStartUTC, durationH);
   $: fitText =
     selectionFit >= 0.999
       ? "Everyone is in working hours"
@@ -46,8 +46,8 @@
     ? formatDateLong(new Date(anchorDate.getTime() + selectedStartUTC * 3600000), anchor.tz)
     : "—";
 
-  $: perPerson = anchor
-    ? people.map((p) => {
+  $: perZone = anchor
+    ? zones.map((p) => {
         const start = new Date(anchorDate.getTime() + selectedStartUTC * 3600000);
         const end = new Date(start.getTime() + durationH * 3600000);
         const sLocal = partsInZone(start, p.tz);
@@ -72,7 +72,7 @@
         };
         const startHour = sLocal.hour + sLocal.minute / 60;
         return {
-          person: p,
+          zone: p,
           startStr: sStr,
           endStr: eStr,
           dayStr,
@@ -129,14 +129,14 @@
         <span>{fitText}</span>
       </div>
       <div class="meeting-detail-grid">
-        {#each perPerson as pp (pp.person.id)}
+        {#each perZone as pp (pp.zone.id)}
           <div
             class="meeting-detail-row"
             class:in-work={pp.startInWork}
             class:off-hours={!pp.startInWork}
           >
-            <Avatar person={pp.person} size={24} />
-            <div class="meeting-detail-name">{pp.person.city}</div>
+            <Avatar zone={pp.zone} size={24} />
+            <div class="meeting-detail-name">{pp.zone.city}</div>
             <div class="meeting-detail-time" data-tnum>
               {pp.startStr} – {pp.endStr}
               {#if pp.dayDelta !== 0}

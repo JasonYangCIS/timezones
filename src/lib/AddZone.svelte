@@ -4,13 +4,13 @@
     TZ_PRESETS,
     TZ_ABBREVIATIONS,
     AVATAR_PALETTE,
-    makePerson,
-    type Person,
+    makeZone,
+    type Zone,
     type TzPreset,
   } from "./data";
   import Plus from "./icons/Plus.svelte";
 
-  const dispatch = createEventDispatcher<{ add: Person }>();
+  const dispatch = createEventDispatcher<{ add: Zone }>();
 
   let q = "";
   let open = false;
@@ -64,7 +64,7 @@
     const color = AVATAR_PALETTE[Math.floor(Math.random() * AVATAR_PALETTE.length)];
     dispatch(
       "add",
-      makePerson({ name: item.city, city: item.city, tz: item.tz, color })
+      makeZone({ name: item.city, city: item.city, tz: item.tz, color })
     );
     q = "";
     open = false;
@@ -95,11 +95,11 @@
   onDestroy(() => document.removeEventListener("mousedown", onDocMouseDown));
 </script>
 
-<div class="add-person" bind:this={wrapEl}>
-  <span class="add-person-icon"><Plus size={14} /></span>
+<div class="add-zone" bind:this={wrapEl}>
+  <span class="add-zone-icon"><Plus size={14} /></span>
   <input
     bind:this={inputEl}
-    class="add-person-input"
+    class="add-zone-input"
     placeholder="Add a city or timezone…"
     bind:value={q}
     on:input={() => {
@@ -110,7 +110,7 @@
     on:keydown={handleKey}
   />
   {#if open && matches.length > 0}
-    <div class="add-person-suggest">
+    <div class="add-zone-suggest">
       {#each matches as m, i (m.tz + m.city)}
         <div
           class="suggest-item"

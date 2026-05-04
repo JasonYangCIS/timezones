@@ -1,8 +1,8 @@
-/* data.ts — seed people, common timezone presets */
+/* data.ts — seed time zones, common timezone presets */
 
 export type TzPreset = { city: string; region: string; tz: string };
 
-export type Person = {
+export type Zone = {
   id: string;
   name: string;
   city: string;
@@ -116,14 +116,14 @@ export const AVATAR_PALETTE = [
   "#7a4848",
 ];
 
-export function makePerson(opts: {
+export function makeZone(opts: {
   name: string;
   city: string;
   tz: string;
   color: string;
   workStart?: number;
   workEnd?: number;
-}): Person {
+}): Zone {
   return {
     id: Math.random().toString(36).slice(2, 9),
     name: opts.name,
@@ -135,9 +135,9 @@ export function makePerson(opts: {
   };
 }
 
-export const SEED_PEOPLE: Person[] = [
-  makePerson({ name: "Maya Chen", city: "San Francisco", tz: "America/Los_Angeles", color: AVATAR_PALETTE[0] }),
-  makePerson({ name: "James Okafor", city: "New York", tz: "America/New_York", color: AVATAR_PALETTE[1] }),
-  makePerson({ name: "Hannah Brooke", city: "London", tz: "Europe/London", color: AVATAR_PALETTE[2] }),
-  makePerson({ name: "Ren Tanaka", city: "Tokyo", tz: "Asia/Tokyo", color: AVATAR_PALETTE[3] }),
+export const SEED_ZONES: Zone[] = [
+  makeZone({ name: "Maya Chen", city: "San Francisco", tz: "America/Los_Angeles", color: AVATAR_PALETTE[0] }),
+  makeZone({ name: "James Okafor", city: "New York", tz: "America/New_York", color: AVATAR_PALETTE[1] }),
+  makeZone({ name: "Hannah Brooke", city: "London", tz: "Europe/London", color: AVATAR_PALETTE[2] }),
+  makeZone({ name: "Ren Tanaka", city: "Tokyo", tz: "Asia/Tokyo", color: AVATAR_PALETTE[3] }),
 ];

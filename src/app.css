@@ -514,7 +514,7 @@ input, select {
   border-radius: 3px;
 }
 
-/* Sweet-spot column highlight (overlaid behind person rows) */
+/* Sweet-spot column highlight (overlaid behind zone rows) */
 .sweet-overlay {
   position: absolute;
   top: 0;
@@ -542,17 +542,17 @@ input, select {
   opacity: 0.5;
 }
 
-/* Person row */
-.person-row {
+/* Zone row */
+.zone-row {
   display: grid;
   grid-template-columns: var(--info-col, minmax(180px, 220px)) minmax(var(--track-min, 0px), 1fr);
   border-top: 1px solid var(--border);
   position: relative;
   min-width: max-content;
 }
-.person-row:first-of-type { border-top: none; }
+.zone-row:first-of-type { border-top: none; }
 
-.person-info {
+.zone-info {
   border-right: 1px solid var(--border);
   padding: 14px 14px;
   display: flex;
@@ -582,13 +582,13 @@ input, select {
   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
 }
 
-.person-meta {
+.zone-meta {
   display: flex;
   flex-direction: column;
   gap: 1px;
   min-width: 0;
 }
-.person-name {
+.zone-name {
   font-size: 17.5px;
   font-weight: 500;
   color: var(--text);
@@ -596,7 +596,7 @@ input, select {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.person-zone {
+.zone-region {
   font-size: 15.5px;
   color: var(--text-3);
   white-space: nowrap;
@@ -604,7 +604,7 @@ input, select {
   text-overflow: ellipsis;
   max-width: 100%;
 }
-.person-meeting-time {
+.zone-meeting-time {
   font-family: "iA Writer Mono", ui-monospace, monospace;
   font-size: 17px;
   color: var(--text);
@@ -614,12 +614,12 @@ input, select {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.person-meeting-time .arrow {
+.zone-meeting-time .arrow {
   color: var(--text-3);
   margin: 0 4px;
   font-weight: 400;
 }
-.person-zone-now {
+.zone-region-now {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -629,10 +629,10 @@ input, select {
   white-space: nowrap;
   overflow: hidden;
 }
-.person-zone-text {
+.zone-region-text {
   letter-spacing: 0.02em;
 }
-.person-now-dot {
+.zone-now-dot {
   width: 3px;
   height: 3px;
   border-radius: 50%;
@@ -640,12 +640,12 @@ input, select {
   flex-shrink: 0;
   display: inline-block;
 }
-.person-now-text {
+.zone-now-text {
   font-family: "iA Writer Mono", ui-monospace, monospace;
   color: var(--text-2);
 }
 
-.person-track {
+.zone-track {
   position: relative;
   height: 76px;
   display: flex;
@@ -778,14 +778,14 @@ input, select {
   border-right: 1px dashed var(--text-3);
 }
 
-/* ---------- Sidebar / People list ---------- */
-.people-list {
+/* ---------- Sidebar / Time zones list ---------- */
+.zones-list {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.people-card {
+.zone-card {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 10px 12px;
@@ -795,23 +795,23 @@ input, select {
   gap: 10px;
   position: relative;
 }
-.people-card:hover { border-color: var(--border-strong); }
+.zone-card:hover { border-color: var(--border-strong); }
 
-.people-card-meta {
+.zone-card-meta {
   display: flex;
   flex-direction: column;
   gap: 1px;
   flex: 1;
   min-width: 0;
 }
-.people-card-name {
+.zone-card-city {
   font-size: 17px;
   font-weight: 450;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.people-card-zone {
+.zone-card-time {
   font-size: 15px;
   color: var(--text-3);
   display: flex;
@@ -821,14 +821,14 @@ input, select {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.people-card-zone > span:first-child {
+.zone-card-time > span:first-child {
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
 }
-.people-card-zone .mono { font-size: 14.5px; }
+.zone-card-time .mono { font-size: 14.5px; }
 
-.people-card-actions {
+.zone-card-actions {
   display: flex;
   align-items: center;
   gap: 2px;
@@ -842,8 +842,8 @@ input, select {
   pointer-events: none;
   transition: opacity 0.12s ease;
 }
-.people-card:hover .people-card-actions,
-.people-card:focus-within .people-card-actions {
+.zone-card:hover .zone-card-actions,
+.zone-card:focus-within .zone-card-actions {
   opacity: 1;
   pointer-events: auto;
 }
@@ -860,12 +860,12 @@ input, select {
 .icon-btn:hover { background: var(--surface-2); color: var(--text); }
 .icon-btn svg { width: 13px; height: 13px; }
 
-/* Add-person input */
-.add-person {
+/* Add-zone input */
+.add-zone {
   margin-top: 8px;
   position: relative;
 }
-.add-person-input {
+.add-zone-input {
   width: 100%;
   height: 36px;
   border: 1px dashed var(--border-strong);
@@ -877,18 +877,18 @@ input, select {
   outline: none;
   transition: all 0.12s ease;
 }
-.add-person-input:hover {
+.add-zone-input:hover {
   border-color: var(--text-3);
   background: var(--surface);
 }
-.add-person-input:focus {
+.add-zone-input:focus {
   border-style: solid;
   border-color: var(--accent);
   background: var(--surface);
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
-.add-person-input::placeholder { color: var(--text-3); }
-.add-person-icon {
+.add-zone-input::placeholder { color: var(--text-3); }
+.add-zone-icon {
   position: absolute;
   left: 11px;
   top: 50%;
@@ -900,7 +900,7 @@ input, select {
   pointer-events: none;
 }
 
-.add-person-suggest {
+.add-zone-suggest {
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
@@ -1030,7 +1030,7 @@ input, select {
 
 .columns-grid {
   display: grid;
-  /* gridTemplateColumns set inline based on person count */
+  /* gridTemplateColumns set inline based on zone count */
   height: 660px;
   min-width: max-content;
 }
@@ -1796,7 +1796,7 @@ input, select {
   background: var(--surface-2);
 }
 
-/* Expanded per-person details */
+/* Expanded per-zone details */
 .meeting-strip-details {
   padding: 14px 16px 18px;
   border-top: 1px dashed var(--border);
