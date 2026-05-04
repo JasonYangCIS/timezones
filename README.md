@@ -4,6 +4,8 @@ A meeting planner that finds the best overlap across multiple time zones.
 
 Built with **Svelte 5**, **TypeScript**, and **Vite**.
 
+[https://jasonyangcis.github.io/timezones](https://jasonyangcis.github.io/timezones)
+
 ## Features
 
 - Add/remove time zones with custom working hours and colors
