@@ -118,7 +118,7 @@
         aria-expanded={detailsOpen}
       >
         <Chevron dir={detailsOpen ? "up" : "down"} />
-        {detailsOpen ? "Hide details" : "Per-person"}
+        {detailsOpen ? "Hide details" : "Time zones"}
       </button>
     </div>
   </div>
