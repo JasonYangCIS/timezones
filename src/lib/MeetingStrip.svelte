@@ -5,8 +5,6 @@
   import { fitForRange, durationLabel } from "./sweetSpot";
   import Avatar from "./Avatar.svelte";
   import Chevron from "./icons/Chevron.svelte";
-  import Copy from "./icons/Copy.svelte";
-  import Share from "./icons/Share.svelte";
 
   export let people: Person[] = [];
   export let anchorDate: Date;
@@ -121,12 +119,6 @@
       >
         <Chevron dir={detailsOpen ? "up" : "down"} />
         {detailsOpen ? "Hide details" : "Per-person"}
-      </button>
-      <button class="btn btn-sm">
-        <Copy /> Copy
-      </button>
-      <button class="btn btn-primary btn-sm">
-        <Share /> Share
       </button>
     </div>
   </div>
