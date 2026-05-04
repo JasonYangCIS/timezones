@@ -921,8 +921,30 @@ input, select {
 }
 .suggest-item:last-child { border-bottom: none; }
 .suggest-item:hover, .suggest-item.active { background: var(--surface-2); }
+.suggest-text { min-width: 0; flex: 1; }
 .suggest-name { font-size: 17px; }
 .suggest-zone { font-size: 15px; color: var(--text-3); }
+.suggest-tz {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.suggest-tz-abbr {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  background: var(--surface-3);
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+.suggest-tz-offset {
+  font-size: 11px;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
 
 /* Working hours editor */
 .work-hours {

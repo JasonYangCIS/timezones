@@ -32,6 +32,34 @@
     ).slice(0, 10);
   })();
 
+  // Get the current short timezone name (e.g. "PDT", "IST", "GMT+5:30") for an IANA tz.
+  function tzAbbr(tz: string): string {
+    try {
+      const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: tz,
+        timeZoneName: "short",
+      }).formatToParts(new Date());
+      const tzn = parts.find((p) => p.type === "timeZoneName");
+      return tzn?.value ?? "";
+    } catch {
+      return "";
+    }
+  }
+
+  // Current UTC offset like "UTC+5:30" / "UTC-7" for an IANA tz.
+  function tzOffset(tz: string): string {
+    try {
+      const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: tz,
+        timeZoneName: "shortOffset",
+      }).formatToParts(new Date());
+      const tzn = parts.find((p) => p.type === "timeZoneName");
+      return tzn?.value ?? "";
+    } catch {
+      return "";
+    }
+  }
+
   function pick(item: TzPreset) {
     const color = AVATAR_PALETTE[Math.floor(Math.random() * AVATAR_PALETTE.length)];
     dispatch(
@@ -96,9 +124,13 @@
           tabindex="-1"
           aria-selected={i === activeIdx}
         >
-          <div>
+          <div class="suggest-text">
             <div class="suggest-name">{m.city}</div>
             <div class="suggest-zone">{m.region} · {m.tz}</div>
+          </div>
+          <div class="suggest-tz">
+            <span class="suggest-tz-abbr">{tzAbbr(m.tz)}</span>
+            <span class="suggest-tz-offset">{tzOffset(m.tz)}</span>
           </div>
         </div>
       {/each}
