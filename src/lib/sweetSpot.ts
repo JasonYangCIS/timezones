@@ -18,6 +18,16 @@ export function durationLabel(hours: number): string {
   return h + "h " + m + "m";
 }
 
+// True if `h` falls inside the (possibly wrapping) local range [workStart-2, workEnd+4):
+// the union of "early", "work", and "evening" bands — i.e. acceptable meeting hours.
+function inExtendedRange(h: number, workStart: number, workEnd: number): boolean {
+  const a = (workStart - 2 + 24) % 24;
+  const b = (workEnd + 4) % 24;
+  if (a === b) return false;
+  if (a < b) return h >= a && h < b;
+  return h >= a || h < b;
+}
+
 export function computeFitGrid(
   people: Person[],
   anchorDate: Date,
@@ -30,24 +40,63 @@ export function computeFitGrid(
     date: Date;
     inCount: number;
     fitFraction: number;
+    extendedCount: number;
+    extendedFraction: number;
   }>;
   for (let s = 0; s < steps; s++) {
     const hourFloat = s * stepHours;
     const slotDate = new Date(anchorDate.getTime() + hourFloat * 3600000);
     let inCount = 0;
+    let extendedCount = 0;
     people.forEach((p) => {
       const local = partsInZone(slotDate, p.tz);
       const lh = local.hour + local.minute / 60;
       if (lh >= p.workStart && lh < p.workEnd) inCount++;
+      if (inExtendedRange(lh, p.workStart, p.workEnd)) extendedCount++;
     });
     grid.push({
       hourFloat,
       date: slotDate,
       inCount,
       fitFraction: people.length ? inCount / people.length : 0,
+      extendedCount,
+      extendedFraction: people.length ? extendedCount / people.length : 0,
     });
   }
   return grid;
+}
+
+// Find windows where ALL people are within their extended (early/work/evening) hours,
+// even if not all are in their strict working hours. Useful when there's no clean
+// overlap of working hours — a 9pm/9am bridge meeting, for example.
+export function findExtendedWindows(
+  grid: ReturnType<typeof computeFitGrid>,
+  minLengthHours = 0.5
+): SweetWindow[] {
+  const windows: { startHour: number; endHour: number }[] = [];
+  let cur: { startHour: number; endHour: number } | null = null;
+  for (const g of grid) {
+    if (g.extendedFraction === 1) {
+      if (!cur) cur = { startHour: g.hourFloat, endHour: g.hourFloat };
+      cur.endHour = g.hourFloat;
+    } else if (cur) {
+      windows.push({ startHour: cur.startHour, endHour: g.hourFloat });
+      cur = null;
+    }
+  }
+  if (cur) windows.push({ startHour: cur.startHour, endHour: cur.endHour + 0.5 });
+  return windows
+    .filter((w) => w.endHour - w.startHour >= minLengthHours)
+    .map((w) => {
+      const dur = w.endHour - w.startHour;
+      return {
+        startUTC: w.startHour,
+        endUTC: w.endHour,
+        durationHours: dur,
+        fitLabel: durationLabel(dur) + " · stretch",
+      };
+    })
+    .sort((a, b) => b.durationHours - a.durationHours);
 }
 
 export function findSweetWindows(
