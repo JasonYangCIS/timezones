@@ -19,6 +19,59 @@
   let people: Person[] = [...SEED_PEOPLE];
   let now: Date = new Date();
   let nowTimer: ReturnType<typeof setInterval>;
+  let hydrated = false;
+
+  // Encode a Person as a single compact URL-safe segment.
+  // Format: name~city~tz~color~workStart~workEnd
+  function encodePerson(p: Person): string {
+    return [p.name, p.city, p.tz, p.color, p.workStart, p.workEnd]
+      .map((v) => encodeURIComponent(String(v)))
+      .join("~");
+  }
+  function decodePerson(seg: string): Person | null {
+    const parts = seg.split("~").map((v) => {
+      try {
+        return decodeURIComponent(v);
+      } catch {
+        return v;
+      }
+    });
+    if (parts.length < 3) return null;
+    const [name, city, tz, color, ws, we] = parts;
+    if (!name || !city || !tz) return null;
+    const workStart = ws !== undefined && ws !== "" ? Number(ws) : 9;
+    const workEnd = we !== undefined && we !== "" ? Number(we) : 17;
+    return {
+      id: Math.random().toString(36).slice(2, 9),
+      name,
+      city,
+      tz,
+      color: color || "#4f6d44",
+      workStart: Number.isFinite(workStart) ? workStart : 9,
+      workEnd: Number.isFinite(workEnd) ? workEnd : 17,
+    };
+  }
+  function readPeopleFromUrl(): Person[] | null {
+    if (typeof window === "undefined") return null;
+    const params = new URLSearchParams(window.location.search);
+    const raw = params.getAll("p");
+    if (!raw.length) return null;
+    const parsed = raw.map(decodePerson).filter((x): x is Person => !!x);
+    return parsed.length ? parsed : null;
+  }
+  function writePeopleToUrl(list: Person[]) {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    params.delete("p");
+    list.forEach((p) => params.append("p", encodePerson(p)));
+    const qs = params.toString();
+    const next =
+      window.location.pathname + (qs ? "?" + qs : "") + window.location.hash;
+    window.history.replaceState(null, "", next);
+  }
+
+  // Sync people -> URL once we've hydrated from the URL on mount.
+  $: if (hydrated) writePeopleToUrl(people);
 
   function isoDate(d: Date) {
     return (
@@ -73,6 +126,9 @@
   }
 
   onMount(() => {
+    const fromUrl = readPeopleFromUrl();
+    if (fromUrl) people = fromUrl;
+    hydrated = true;
     nowTimer = setInterval(() => (now = new Date()), 30000);
   });
   onDestroy(() => clearInterval(nowTimer));
