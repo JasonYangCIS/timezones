@@ -133,7 +133,8 @@
       const dxPct = (dx / rect.width) * 100;
       let newPct = startLeftPct + dxPct;
       let newHour = (newPct / 100) * HOURS;
-      newHour = Math.round(newHour);
+      // Snap to 30-minute (0.5h) increments while dragging.
+      newHour = Math.round(newHour * 2) / 2;
       newHour = Math.max(0, Math.min(HOURS - selectedDurationH, newHour));
       dispatch("seek", newHour);
     }
