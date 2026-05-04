@@ -1,14 +1,14 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import { SEED_PEOPLE, type Person } from "./lib/data";
+  import { SEED_ZONES, type Zone } from "./lib/data";
   import {
     computeFitGrid,
     findSweetWindows,
     findExtendedWindows,
     findBestPartial,
   } from "./lib/sweetSpot";
-  import PersonCard from "./lib/PersonCard.svelte";
-  import AddPerson from "./lib/AddPerson.svelte";
+  import ZoneCard from "./lib/ZoneCard.svelte";
+  import AddZone from "./lib/AddZone.svelte";
   import SweetSpotList from "./lib/SweetSpotList.svelte";
   import MeetingStrip from "./lib/MeetingStrip.svelte";
   import StackedTimeline from "./lib/StackedTimeline.svelte";
@@ -16,19 +16,19 @@
   type Tweaks = { h24: boolean; theme: "light" | "dark"; duration: number };
   let tweaks: Tweaks = { h24: false, theme: "light", duration: 1 };
 
-  let people: Person[] = [...SEED_PEOPLE];
+  let zones: Zone[] = [...SEED_ZONES];
   let now: Date = new Date();
   let nowTimer: ReturnType<typeof setInterval>;
   let hydrated = false;
 
-  // Encode a Person as a single compact URL-safe segment.
+  // Encode a Zone as a single compact URL-safe segment.
   // Format: name~city~tz~color~workStart~workEnd
-  function encodePerson(p: Person): string {
+  function encodeZone(p: Zone): string {
     return [p.name, p.city, p.tz, p.color, p.workStart, p.workEnd]
       .map((v) => encodeURIComponent(String(v)))
       .join("~");
   }
-  function decodePerson(seg: string): Person | null {
+  function decodeZone(seg: string): Zone | null {
     const parts = seg.split("~").map((v) => {
       try {
         return decodeURIComponent(v);
@@ -51,27 +51,27 @@
       workEnd: Number.isFinite(workEnd) ? workEnd : 17,
     };
   }
-  function readPeopleFromUrl(): Person[] | null {
+  function readZonesFromUrl(): Zone[] | null {
     if (typeof window === "undefined") return null;
     const params = new URLSearchParams(window.location.search);
-    const raw = params.getAll("p");
+    const raw = params.getAll("tz");
     if (!raw.length) return null;
-    const parsed = raw.map(decodePerson).filter((x): x is Person => !!x);
+    const parsed = raw.map(decodeZone).filter((x): x is Zone => !!x);
     return parsed.length ? parsed : null;
   }
-  function writePeopleToUrl(list: Person[]) {
+  function writeZonesToUrl(list: Zone[]) {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
-    params.delete("p");
-    list.forEach((p) => params.append("p", encodePerson(p)));
+    params.delete("tz");
+    list.forEach((z) => params.append("tz", encodeZone(z)));
     const qs = params.toString();
     const next =
       window.location.pathname + (qs ? "?" + qs : "") + window.location.hash;
     window.history.replaceState(null, "", next);
   }
 
-  // Sync people -> URL once we've hydrated from the URL on mount.
-  $: if (hydrated) writePeopleToUrl(people);
+  // Sync zones -> URL once we've hydrated from the URL on mount.
+  $: if (hydrated) writeZonesToUrl(zones);
 
   function isoDate(d: Date) {
     return (
@@ -94,7 +94,7 @@
   $: anchorDate = getAnchorDate(dateStr);
   $: duration = tweaks.duration || 1;
 
-  $: grid = computeFitGrid(people, anchorDate, 0.5, 24);
+  $: grid = computeFitGrid(zones, anchorDate, 0.5, 24);
   $: sweetWindows = (() => {
     const full = findSweetWindows(grid, 0.5);
     if (full.length) return full;
@@ -110,10 +110,10 @@
     document.documentElement.dataset.theme = tweaks.theme === "dark" ? "dark" : "light";
   }
 
-  // Auto-select longest sweet window when people/date change
+  // Auto-select longest sweet window when zones/date change
   let lastAuto = "";
   $: {
-    const sig = people.map((p) => p.id).join(",") + "|" + dateStr;
+    const sig = zones.map((z) => z.id).join(",") + "|" + dateStr;
     if (lastAuto !== sig && sweetWindows.length) {
       lastAuto = sig;
       const w = sweetWindows[0];
@@ -126,21 +126,21 @@
   }
 
   onMount(() => {
-    const fromUrl = readPeopleFromUrl();
-    if (fromUrl) people = fromUrl;
+    const fromUrl = readZonesFromUrl();
+    if (fromUrl) zones = fromUrl;
     hydrated = true;
     nowTimer = setInterval(() => (now = new Date()), 30000);
   });
   onDestroy(() => clearInterval(nowTimer));
 
-  function addPerson(p: Person) {
-    people = [...people, p];
+  function addZone(z: Zone) {
+    zones = [...zones, z];
   }
-  function removePerson(id: string) {
-    people = people.filter((p) => p.id !== id);
+  function removeZone(id: string) {
+    zones = zones.filter((z) => z.id !== id);
   }
-  function updatePerson(id: string, patch: Partial<Person>) {
-    people = people.map((p) => (p.id === id ? { ...p, ...patch } : p));
+  function updateZone(id: string, patch: Partial<Zone>) {
+    zones = zones.map((z) => (z.id === id ? { ...z, ...patch } : z));
   }
   function shiftDate(days: number) {
     const d = new Date(anchorDate.getTime() + days * 86400000);
@@ -176,18 +176,18 @@
   <div class="workspace">
     <aside class="sidebar">
       <div>
-        <div class="sidebar-section-title">Timezones · {people.length}</div>
-        <div class="people-list">
-          {#each people as p (p.id)}
-            <PersonCard
-              person={p}
+        <div class="sidebar-section-title">Timezones · {zones.length}</div>
+        <div class="zones-list">
+          {#each zones as z (z.id)}
+            <ZoneCard
+              zone={z}
               h24={tweaks.h24}
               {now}
-              on:remove={(e) => removePerson(e.detail.id)}
-              on:update={(e) => updatePerson(e.detail.id, e.detail.patch)}
+              on:remove={(e) => removeZone(e.detail.id)}
+              on:update={(e) => updateZone(e.detail.id, e.detail.patch)}
             />
           {/each}
-          <AddPerson on:add={(e) => addPerson(e.detail)} />
+          <AddZone on:add={(e) => addZone(e.detail)} />
         </div>
       </div>
 
@@ -214,7 +214,7 @@
 
     <main class="canvas">
       <MeetingStrip
-        {people}
+        {zones}
         {anchorDate}
         {selectedStartUTC}
         durationH={duration}
@@ -223,7 +223,7 @@
       />
 
       <StackedTimeline
-        {people}
+        {zones}
         {anchorDate}
         h24={tweaks.h24}
         {selectedStartUTC}

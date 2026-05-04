@@ -1,6 +1,6 @@
-/* sweetSpot.ts — find overlapping working-hour windows across people */
+/* sweetSpot.ts — find overlapping working-hour windows across time zones */
 
-import type { Person } from "./data";
+import type { Zone } from "./data";
 import { partsInZone } from "./tz";
 
 export type SweetWindow = {
@@ -29,7 +29,7 @@ function inExtendedRange(h: number, workStart: number, workEnd: number): boolean
 }
 
 export function computeFitGrid(
-  people: Person[],
+  zones: Zone[],
   anchorDate: Date,
   stepHours = 0.5,
   hours = 24
@@ -48,7 +48,7 @@ export function computeFitGrid(
     const slotDate = new Date(anchorDate.getTime() + hourFloat * 3600000);
     let inCount = 0;
     let extendedCount = 0;
-    people.forEach((p) => {
+    zones.forEach((p) => {
       const local = partsInZone(slotDate, p.tz);
       const lh = local.hour + local.minute / 60;
       if (lh >= p.workStart && lh < p.workEnd) inCount++;
@@ -58,15 +58,15 @@ export function computeFitGrid(
       hourFloat,
       date: slotDate,
       inCount,
-      fitFraction: people.length ? inCount / people.length : 0,
+      fitFraction: zones.length ? inCount / zones.length : 0,
       extendedCount,
-      extendedFraction: people.length ? extendedCount / people.length : 0,
+      extendedFraction: zones.length ? extendedCount / zones.length : 0,
     });
   }
   return grid;
 }
 
-// Find windows where ALL people are within their extended (early/work/evening) hours,
+// Find windows where ALL zones are within their extended (early/work/evening) hours,
 // even if not all are in their strict working hours. Useful when there's no clean
 // overlap of working hours — a 9pm/9am bridge meeting, for example.
 export function findExtendedWindows(
@@ -158,7 +158,7 @@ export function findBestPartial(
 }
 
 export function fitForRange(
-  people: Person[],
+  zones: Zone[],
   anchorDate: Date,
   startHourUTC: number,
   durationHours = 1
@@ -169,13 +169,13 @@ export function fitForRange(
     const hf = startHourUTC + s * 0.5;
     const d = new Date(anchorDate.getTime() + hf * 3600000);
     let countIn = 0;
-    people.forEach((p) => {
+    zones.forEach((p) => {
       const local = partsInZone(d, p.tz);
       const lh = local.hour + local.minute / 60;
       if (lh >= p.workStart && lh < p.workEnd) countIn++;
     });
     totalIn += countIn;
   }
-  const totalSlots = steps * people.length;
+  const totalSlots = steps * zones.length;
   return totalSlots ? totalIn / totalSlots : 0;
 }

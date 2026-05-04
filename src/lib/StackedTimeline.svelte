@@ -18,7 +18,7 @@
 
 <script lang="ts">
   import { createEventDispatcher, onMount, onDestroy } from "svelte";
-  import type { Person } from "./data";
+  import type { Zone } from "./data";
   import {
     partsInZone,
     offsetMinutes,
@@ -30,7 +30,7 @@
   import Avatar from "./Avatar.svelte";
   import BandGlyph from "./icons/BandGlyph.svelte";
 
-  export let people: Person[] = [];
+  export let zones: Zone[] = [];
   export let anchorDate: Date;
   export let h24 = false;
   export let selectedStartUTC = 0;
@@ -51,7 +51,7 @@
   });
   onDestroy(() => clearInterval(nowTimer));
 
-  $: anchor = people[0];
+  $: anchor = zones[0];
   $: anchorOffMin = anchor ? offsetMinutes(now, anchor.tz) : 0;
   $: hoursFromAnchor = anchorDate ? (now.getTime() - anchorDate.getTime()) / 3600000 : -1;
   $: showNow = hoursFromAnchor >= 0 && hoursFromAnchor <= HOURS;
@@ -77,7 +77,7 @@
   }
 
   // Build per-row cell metadata
-  function buildCells(p: Person) {
+  function buildCells(p: Zone) {
     const cells = [];
     let prevLocalDay: number | null = null;
     let prevBand: Band | null = null;
@@ -108,7 +108,7 @@
     return cells;
   }
 
-  function rowDelta(p: Person, isAnchor: boolean) {
+  function rowDelta(p: Zone, isAnchor: boolean) {
     if (isAnchor) return "";
     const off = offsetMinutes(now, p.tz) - anchorOffMin;
     const sign = off > 0 ? "+" : off < 0 ? "−" : "";
@@ -172,7 +172,7 @@
   </div>
 
   <div class="wtb-rows" style="position: relative">
-    {#each people as p, i (p.id)}
+    {#each zones as p, i (p.id)}
       {@const isAnchor = i === 0}
       {@const cells = buildCells(p)}
       {@const nowLocal = partsInZone(now, p.tz)}
@@ -181,7 +181,7 @@
       {@const deltaStr = rowDelta(p, isAnchor)}
       <div class="wtb-row" class:is-anchor={isAnchor}>
         <div class="wtb-row-info">
-          <Avatar person={p} size={28} />
+          <Avatar zone={p} size={28} />
           <div class="wtb-row-info-meta">
             <div class="wtb-row-name">
               {#if !isAnchor && deltaStr}
