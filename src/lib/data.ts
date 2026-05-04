@@ -57,6 +57,56 @@ export const TZ_PRESETS: TzPreset[] = [
   { city: "Honolulu", region: "USA", tz: "Pacific/Honolulu" },
 ];
 
+/**
+ * Common timezone abbreviations mapped to IANA timezone identifiers.
+ * Used to make search match queries like "PDT", "EST", "JST", etc.
+ */
+export const TZ_ABBREVIATIONS: Record<string, string[]> = {
+  // North America
+  pst: ["America/Los_Angeles"],
+  pdt: ["America/Los_Angeles"],
+  pt: ["America/Los_Angeles"],
+  mst: ["America/Denver", "America/Phoenix"],
+  mdt: ["America/Denver"],
+  mt: ["America/Denver"],
+  cst: ["America/Chicago", "Asia/Shanghai"],
+  cdt: ["America/Chicago"],
+  ct: ["America/Chicago"],
+  est: ["America/New_York"],
+  edt: ["America/New_York"],
+  et: ["America/New_York"],
+  akst: ["America/Anchorage"],
+  akdt: ["America/Anchorage"],
+  hst: ["Pacific/Honolulu"],
+  // Europe / Africa
+  gmt: ["Europe/London"],
+  bst: ["Europe/London"],
+  utc: ["Europe/London"],
+  wet: ["Europe/Lisbon"],
+  west: ["Europe/Lisbon"],
+  cet: ["Europe/Paris", "Europe/Berlin", "Europe/Madrid", "Europe/Amsterdam"],
+  cest: ["Europe/Paris", "Europe/Berlin", "Europe/Madrid", "Europe/Amsterdam"],
+  eet: ["Europe/Athens", "Europe/Istanbul", "Africa/Cairo"],
+  eest: ["Europe/Athens"],
+  // Middle East / Asia
+  gst: ["Asia/Dubai"],
+  ist: ["Asia/Kolkata", "Asia/Jerusalem"],
+  ict: ["Asia/Bangkok"],
+  sgt: ["Asia/Singapore"],
+  hkt: ["Asia/Hong_Kong"],
+  jst: ["Asia/Tokyo"],
+  kst: ["Asia/Seoul"],
+  // Oceania
+  aest: ["Australia/Sydney", "Australia/Melbourne"],
+  aedt: ["Australia/Sydney", "Australia/Melbourne"],
+  awst: ["Australia/Perth"],
+  nzst: ["Pacific/Auckland"],
+  nzdt: ["Pacific/Auckland"],
+  // South America
+  brt: ["America/Sao_Paulo"],
+  art: ["America/Argentina/Buenos_Aires"],
+};
+
 export const AVATAR_PALETTE = [
   "#4f6d44",
   "#3f5a7c",

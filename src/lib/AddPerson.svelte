@@ -1,6 +1,13 @@
 <script lang="ts">
   import { createEventDispatcher, onMount, onDestroy } from "svelte";
-  import { TZ_PRESETS, AVATAR_PALETTE, makePerson, type Person, type TzPreset } from "./data";
+  import {
+    TZ_PRESETS,
+    TZ_ABBREVIATIONS,
+    AVATAR_PALETTE,
+    makePerson,
+    type Person,
+    type TzPreset,
+  } from "./data";
   import Plus from "./icons/Plus.svelte";
 
   const dispatch = createEventDispatcher<{ add: Person }>();
@@ -14,11 +21,14 @@
   $: matches = (() => {
     if (!q.trim()) return TZ_PRESETS.slice(0, 8);
     const lower = q.trim().toLowerCase();
+    // Match abbreviations like PDT/EST/JST against IANA tz ids.
+    const abbrevTzs = new Set(TZ_ABBREVIATIONS[lower] ?? []);
     return TZ_PRESETS.filter(
       (p) =>
         p.city.toLowerCase().includes(lower) ||
         p.region.toLowerCase().includes(lower) ||
-        p.tz.toLowerCase().includes(lower)
+        p.tz.toLowerCase().includes(lower) ||
+        abbrevTzs.has(p.tz)
     ).slice(0, 10);
   })();
 
