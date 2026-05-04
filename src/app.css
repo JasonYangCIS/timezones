@@ -1677,9 +1677,32 @@ input, select {
   .wtb-card { --wtb-info-w: 180px; --wtb-cell-min: 38px; }
 }
 @media (max-width: 860px) {
-  .wtb-card { --wtb-info-w: 150px; --wtb-cell-min: 32px; --wtb-cell-h: 46px; }
+  .wtb-card {
+    --wtb-info-w: 140px;
+    --wtb-cell-min: 44px;
+    --wtb-cell-h: 46px;
+    /* Allow the 24-hour grid to extend beyond the viewport and scroll. */
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+  }
+  .wtb-day-strip-row,
+  .wtb-rows {
+    /* Info column + 24 cells at the min width — guarantees the grid stays
+       legible and forces horizontal scroll on narrow screens. */
+    min-width: calc(var(--wtb-info-w) + (var(--wtb-cell-min) * 24) + 28px);
+  }
   .wtb-cell-main { font-size: 16px; }
   .wtb-cell-sub { font-size: 10px; }
+}
+@media (max-width: 540px) {
+  .wtb-card {
+    --wtb-info-w: 116px;
+    --wtb-cell-min: 40px;
+    --wtb-cell-h: 44px;
+  }
+  .wtb-cell-main { font-size: 15px; }
 }
 
 
