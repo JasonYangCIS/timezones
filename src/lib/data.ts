@@ -136,8 +136,8 @@ export function makeZone(opts: {
 }
 
 export const SEED_ZONES: Zone[] = [
-  makeZone({ name: "Maya Chen", city: "San Francisco", tz: "America/Los_Angeles", color: AVATAR_PALETTE[0] }),
-  makeZone({ name: "James Okafor", city: "New York", tz: "America/New_York", color: AVATAR_PALETTE[1] }),
-  makeZone({ name: "Hannah Brooke", city: "London", tz: "Europe/London", color: AVATAR_PALETTE[2] }),
-  makeZone({ name: "Ren Tanaka", city: "Tokyo", tz: "Asia/Tokyo", color: AVATAR_PALETTE[3] }),
+  makeZone({ name: "San Francisco", city: "San Francisco", tz: "America/Los_Angeles", color: AVATAR_PALETTE[0] }),
+  makeZone({ name: "New York", city: "New York", tz: "America/New_York", color: AVATAR_PALETTE[1] }),
+  makeZone({ name: "London", city: "London", tz: "Europe/London", color: AVATAR_PALETTE[2] }),
+  makeZone({ name: "Tokyo", city: "Tokyo", tz: "Asia/Tokyo", color: AVATAR_PALETTE[3] }),
 ];
