@@ -108,7 +108,7 @@
   <div class="topbar">
     <div class="brand">
       <span class="brand-mark"></span>
-      <span class="brand-name">easy-timezones</span>
+      <span class="brand-name">Time Zones</span>
     </div>
     <div class="topbar-actions">
       <span>Click any cell to set the meeting</span>
