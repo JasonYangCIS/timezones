@@ -294,12 +294,12 @@
 <style>
   .tweaks-fab {
     position: fixed;
-    right: 22px;
+    left: 22px;
     bottom: 22px;
     z-index: 100;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
     gap: 8px;
   }
   .tweaks-panel {
