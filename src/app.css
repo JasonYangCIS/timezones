@@ -1255,6 +1255,7 @@ input, select {
   border-radius: 18px;
   box-shadow: var(--shadow-md);
   overflow: hidden;
+  min-width: 720px;
 }
 
 /* ── Day strip row at top ─────────────────────────────────── */
