@@ -1564,6 +1564,10 @@ input, select {
   /* Slight visual emphasis so the day-change is easy to spot */
   outline: 1.5px solid color-mix(in oklab, currentColor, transparent 70%);
   outline-offset: -2px;
+  /* Extra top padding shifts the flex-centered time down a few px so it
+     doesn't crowd the absolute date badge above. */
+  padding-top: 12px;
+  padding-bottom: 4px;
 }
 .wtb-cell-datepill {
   position: absolute;
