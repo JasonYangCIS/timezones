@@ -1,25 +1,27 @@
 /* easy-timezones — calm, minimal aesthetic */
 
 :root {
-  /* Light theme */
-  --bg: #f7f6f3;
-  --surface: #ffffff;
-  --surface-2: #efeee9;
-  --surface-3: #e4e2dc;
-  --border: #d8d5cd;
-  --border-strong: #b8b4a9;
-  --text: #0d0d0b;
-  --text-2: #2d2c28;
-  --text-3: #555349;
-  --text-4: #7a776d;
-  --accent: #3a5732; /* deeper sage */
-  --accent-soft: #dde7d8;
-  --accent-strong: #2a4023;
-  --night: #c8c5bc;
-  --night-soft: #ddd9cf;
-  --sweet: #b6c8ac;
-  --sweet-strong: #6a8a5f;
-  --warning: #9c6f3f;
+  /* Light theme — "twilight" palette: warm parchment surfaces with a deep
+     dusk-plum accent so the chrome relates to the day-cycle band story
+     (sleep purple → wheat → daylight yellow → dusk mauve → night purple). */
+  --bg: #f5f1ea;
+  --surface: #fffdf8;
+  --surface-2: #ece5d8;
+  --surface-3: #ddd3c2;
+  --border: #d0c6b3;
+  --border-strong: #ada18a;
+  --text: #1a1320;
+  --text-2: #36303d;
+  --text-3: #5a5466;
+  --text-4: #8a8493;
+  --accent: #5d4174; /* dusk plum — ties to evening + night bands */
+  --accent-soft: #ebe2f1;
+  --accent-strong: #3e2754;
+  --night: #c2bcc8;
+  --night-soft: #d9d3df;
+  --sweet: #f0d496;     /* a slice of daylight — "good time" = sun is up */
+  --sweet-strong: #b88826;
+  --warning: #b07432;
   --shadow-sm: 0 1px 2px rgba(20, 20, 18, 0.06);
   --shadow-md: 0 1px 3px rgba(20, 20, 18, 0.08), 0 4px 12px rgba(20, 20, 18, 0.06);
   --shadow-lg: 0 2px 6px rgba(20, 20, 18, 0.08), 0 12px 32px rgba(20, 20, 18, 0.10);
@@ -29,23 +31,23 @@
 }
 
 [data-theme="dark"] {
-  --bg: #0e0f0d;
-  --surface: #1a1b18;
-  --surface-2: #232420;
-  --surface-3: #2e2f2a;
-  --border: #36372f;
-  --border-strong: #50514a;
-  --text: #f5f4ee;
-  --text-2: #d6d3c9;
-  --text-3: #9a978c;
-  --text-4: #66635c;
-  --accent: #b6d6a7;
-  --accent-soft: #2e3e29;
-  --accent-strong: #d2e6c5;
-  --night: #232420;
-  --night-soft: #1d1e1b;
-  --sweet: #4f6644;
-  --sweet-strong: #b6d6a7;
+  --bg: #0e0a14;
+  --surface: #181221;
+  --surface-2: #221a2e;
+  --surface-3: #2c2339;
+  --border: #382c47;
+  --border-strong: #564668;
+  --text: #f5f1f6;
+  --text-2: #dad4dd;
+  --text-3: #a09aa6;
+  --text-4: #6d6675;
+  --accent: #c9a8e1;
+  --accent-soft: #3e2754;
+  --accent-strong: #e6d3f0;
+  --night: #221a2e;
+  --night-soft: #181221;
+  --sweet: #5b4218;
+  --sweet-strong: #f0d496;
   --warning: #e8b988;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
   --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.4);
