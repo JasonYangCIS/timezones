@@ -1623,65 +1623,74 @@ input, select {
 }
 
 .wtb-selection {
-  /* Sky blue — sits opposite the warm purple/yellow band palette so the
-     scrubber column reads as a UI control, not as another time-of-day band. */
-  --wtb-sel-color: #18b6f6;
-  --wtb-sel-color-bright: #6fd3ff;
+  /* Coral — distinct from every time-of-day band (purple / wheat / yellow /
+     mauve), and warmer than the previous teal/blue. The selection now reads
+     as a "calendar event card" pinned over the timeline. */
+  --wtb-sel-color: #ff5a3c;
+  --wtb-sel-color-deep: #c43a22;
   position: absolute;
-  top: 2px;
-  bottom: 2px;
-  border: 2.5px solid var(--wtb-sel-color);
-  border-radius: 12px;
-  /* Very light fill — the contour does the heavy lifting so it works over any band. */
+  top: -10px;
+  bottom: -10px;
+  border-radius: 6px;
+  /* Solid vertical rails on the sides; no top/bottom borders. The fill is a
+     soft tint so band colors underneath stay readable. */
+  border-left: 3px solid var(--wtb-sel-color);
+  border-right: 3px solid var(--wtb-sel-color);
   background:
     linear-gradient(180deg,
-      color-mix(in oklab, var(--wtb-sel-color), transparent 88%),
-      color-mix(in oklab, var(--wtb-sel-color), transparent 96%));
+      color-mix(in oklab, var(--wtb-sel-color), transparent 86%),
+      color-mix(in oklab, var(--wtb-sel-color), transparent 94%));
   pointer-events: auto;
   cursor: grab;
   box-shadow:
-    /* white halo so the dark border separates from any colored band underneath */
-    0 0 0 2px var(--surface),
-    /* outer accent ring */
-    0 0 0 3.5px color-mix(in oklab, var(--wtb-sel-color), transparent 60%),
-    /* drop */
-    0 12px 28px -10px color-mix(in oklab, var(--wtb-sel-color), transparent 40%),
-    inset 0 0 0 1px color-mix(in oklab, #ffffff, transparent 75%);
+    /* subtle drop shadow gives the rail a "pinned card" lift */
+    0 6px 18px -6px color-mix(in oklab, var(--wtb-sel-color-deep), transparent 55%);
   transition: left 220ms cubic-bezier(0.22, 1, 0.36, 1), width 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Top + bottom caps — small bright bars that anchor the selection like a
-   scrubber. Reads instantly as "this is the active column." */
-.wtb-selection::before,
+/* Top flag tab — a small downward-pointing tag that labels the column the way
+   a calendar event marker would. Its fill is the solid selection color. */
+.wtb-selection::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: -3px;
+  right: -3px;
+  height: 10px;
+  background: var(--wtb-sel-color);
+  border-radius: 4px 4px 0 0;
+  /* Subtle notches at the bottom corners so the tab reads as a flag/ribbon. */
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 75% 60%, 25% 60%, 0 100%);
+}
+
+/* Matching bottom tab so the rail is symmetric and obviously a "pinned" item. */
 .wtb-selection::after {
   content: "";
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  max-width: 36px;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--wtb-sel-color-bright, var(--wtb-sel-color));
-  box-shadow: 0 0 6px color-mix(in oklab, var(--wtb-sel-color-bright, var(--wtb-sel-color)), transparent 40%);
+  bottom: -6px;
+  left: -3px;
+  right: -3px;
+  height: 10px;
+  background: var(--wtb-sel-color);
+  border-radius: 0 0 4px 4px;
+  clip-path: polygon(0 0, 25% 40%, 75% 40%, 100% 0, 100% 100%, 0 100%);
 }
-.wtb-selection::before { top: -3px; }
-.wtb-selection::after { bottom: -3px; }
 
 .wtb-selection:hover {
+  background:
+    linear-gradient(180deg,
+      color-mix(in oklab, var(--wtb-sel-color), transparent 78%),
+      color-mix(in oklab, var(--wtb-sel-color), transparent 90%));
   box-shadow:
-    0 0 0 2px var(--surface),
-    0 0 0 4.5px color-mix(in oklab, var(--wtb-sel-color), transparent 45%),
-    0 16px 32px -8px color-mix(in oklab, var(--wtb-sel-color), transparent 25%),
-    inset 0 0 0 1px color-mix(in oklab, #ffffff, transparent 70%);
+    0 10px 24px -6px color-mix(in oklab, var(--wtb-sel-color-deep), transparent 40%);
 }
 .wtb-selection:active {
   cursor: grabbing;
   transition: none;
 }
 [data-theme="dark"] .wtb-selection {
-  --wtb-sel-color: #4ec3ff;
-  --wtb-sel-color-bright: #a8e0ff;
+  --wtb-sel-color: #ff7a5e;
+  --wtb-sel-color-deep: #e0563a;
 }
 
 /* Track wrappers that match the cell region exactly. The row's cells use
