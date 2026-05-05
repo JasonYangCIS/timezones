@@ -167,11 +167,7 @@
       <span class="brand-mark"></span>
       <span class="brand-name">Time Zones</span>
     </div>
-    <div class="topbar-actions">
-      <span>Click any cell to set the meeting</span>
-      <span style="margin: 0 8px; color: var(--text-4)">·</span>
-      <span>Drag the highlight to slide it</span>
-    </div>
+    <div class="topbar-actions"></div>
   </div>
 
   <div class="workspace">
