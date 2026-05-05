@@ -1623,39 +1623,65 @@ input, select {
 }
 
 .wtb-selection {
-  --wtb-sel-color: #4f46e5;
+  /* Pine teal — sits opposite the warm purple/yellow band palette so the
+     scrubber column reads as a UI control, not as another time-of-day band. */
+  --wtb-sel-color: #0e7c8a;
+  --wtb-sel-color-bright: #18b3c1;
   position: absolute;
-  top: 4px;
-  bottom: 4px;
-  border: 2px solid var(--wtb-sel-color);
-  border-radius: 14px;
+  top: 2px;
+  bottom: 2px;
+  border: 2.5px solid var(--wtb-sel-color);
+  border-radius: 12px;
+  /* Very light fill — the contour does the heavy lifting so it works over any band. */
   background:
     linear-gradient(180deg,
-      color-mix(in oklab, var(--wtb-sel-color), transparent 82%),
-      color-mix(in oklab, var(--wtb-sel-color), transparent 92%));
+      color-mix(in oklab, var(--wtb-sel-color), transparent 88%),
+      color-mix(in oklab, var(--wtb-sel-color), transparent 96%));
   pointer-events: auto;
   cursor: grab;
   box-shadow:
-    0 0 0 3px var(--surface),
-    0 0 0 4px color-mix(in oklab, var(--wtb-sel-color), transparent 70%),
-    0 10px 28px -8px color-mix(in oklab, var(--wtb-sel-color), transparent 45%),
-    inset 0 1px 0 color-mix(in oklab, #ffffff, transparent 70%);
+    /* white halo so the dark border separates from any colored band underneath */
+    0 0 0 2px var(--surface),
+    /* outer accent ring */
+    0 0 0 3.5px color-mix(in oklab, var(--wtb-sel-color), transparent 60%),
+    /* drop */
+    0 12px 28px -10px color-mix(in oklab, var(--wtb-sel-color), transparent 40%),
+    inset 0 0 0 1px color-mix(in oklab, #ffffff, transparent 75%);
   transition: left 220ms cubic-bezier(0.22, 1, 0.36, 1), width 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* Top + bottom caps — small bright bars that anchor the selection like a
+   scrubber. Reads instantly as "this is the active column." */
+.wtb-selection::before,
+.wtb-selection::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  max-width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--wtb-sel-color-bright, var(--wtb-sel-color));
+  box-shadow: 0 0 6px color-mix(in oklab, var(--wtb-sel-color-bright, var(--wtb-sel-color)), transparent 40%);
+}
+.wtb-selection::before { top: -3px; }
+.wtb-selection::after { bottom: -3px; }
+
 .wtb-selection:hover {
   box-shadow:
-    0 0 0 3px var(--surface),
-    0 0 0 5px color-mix(in oklab, var(--wtb-sel-color), transparent 55%),
-    0 14px 32px -8px color-mix(in oklab, var(--wtb-sel-color), transparent 35%),
-    inset 0 1px 0 color-mix(in oklab, #ffffff, transparent 65%);
+    0 0 0 2px var(--surface),
+    0 0 0 4.5px color-mix(in oklab, var(--wtb-sel-color), transparent 45%),
+    0 16px 32px -8px color-mix(in oklab, var(--wtb-sel-color), transparent 25%),
+    inset 0 0 0 1px color-mix(in oklab, #ffffff, transparent 70%);
 }
 .wtb-selection:active {
   cursor: grabbing;
-  /* During an active drag, kill the tween so it tracks the cursor */
   transition: none;
 }
 [data-theme="dark"] .wtb-selection {
-  --wtb-sel-color: #818cf8;
+  --wtb-sel-color: #5fd0d3;
+  --wtb-sel-color-bright: #9eecef;
 }
 
 /* Track wrappers that match the cell region exactly. The row's cells use
