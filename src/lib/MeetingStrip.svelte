@@ -249,7 +249,15 @@
         {/each}
       </div>
       <div class="meeting-strip-meta">
-        <span class="meeting-strip-day">{summary.day}</span>
+        <span
+          class="meeting-strip-day"
+          title={anchor ? "Date shown in " + anchor.city + " (anchor zone)" : ""}
+        >
+          {summary.day}
+          {#if anchor}
+            <span class="meeting-strip-day-zone">in {anchor.city}</span>
+          {/if}
+        </span>
         <span class="meeting-strip-sep">·</span>
         <span class="meeting-strip-pill">{durationLabel(durationH)}</span>
         <span class="meeting-strip-sep">·</span>

@@ -2128,3 +2128,10 @@ input, select {
   color: var(--text-2);
   cursor: help;
 }
+.meeting-strip-day-zone {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
+  margin-left: 4px;
+  letter-spacing: 0.01em;
+}
