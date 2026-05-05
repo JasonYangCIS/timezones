@@ -1579,7 +1579,9 @@ input, select {
   opacity: 0.9;
 }
 .wtb-cell.has-date-pill .wtb-cell-main {
-  margin-top: 8px;
+  /* Date pill is absolutely positioned at the top of the cell; don't nudge
+     the time down — keep it visually centered in the cell. */
+  margin-top: 0;
 }
 
 /* Time-of-day glyph at band transitions — small, top-right */
