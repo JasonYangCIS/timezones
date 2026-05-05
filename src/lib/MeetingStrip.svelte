@@ -125,15 +125,44 @@
       "00Z"
     );
   }
-  function exportIcs() {
-    if (!anchor) return;
+  // Build the title + description shared by both .ics and Google Calendar.
+  function buildEventMeta() {
     const start = new Date(anchorDate.getTime() + selectedStartUTC * 3600000);
     const end = new Date(start.getTime() + durationH * 3600000);
-    const stamp = toUtcStamp(new Date());
     const summaryTxt = `Meeting · ${zones.map((z) => z.city).join(" / ")}`;
-    const desc = headlineChips
-      .map((c) => `${c.zone.city}: ${c.timeStr}${c.inWork ? "" : " (off-hours)"}`)
-      .join("\\n");
+    const descLines = headlineChips.map(
+      (c) => `${c.zone.city}: ${c.timeStr}${c.inWork ? "" : " (off-hours)"}`
+    );
+    return { start, end, summaryTxt, descLines };
+  }
+
+  function openGoogleCalendar() {
+    if (!anchor) return;
+    const { start, end, summaryTxt, descLines } = buildEventMeta();
+    // Google Calendar `dates` param uses compact UTC: YYYYMMDDTHHmmssZ/YYYYMMDDTHHmmssZ
+    const fmt = (d: Date) =>
+      d.getUTCFullYear() +
+      pad(d.getUTCMonth() + 1) +
+      pad(d.getUTCDate()) +
+      "T" +
+      pad(d.getUTCHours()) +
+      pad(d.getUTCMinutes()) +
+      "00Z";
+    const params = new URLSearchParams({
+      action: "TEMPLATE",
+      text: summaryTxt,
+      dates: `${fmt(start)}/${fmt(end)}`,
+      details: descLines.join("\n"),
+    });
+    const url = "https://calendar.google.com/calendar/render?" + params.toString();
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+
+  function exportIcs() {
+    if (!anchor) return;
+    const { start, end, summaryTxt, descLines } = buildEventMeta();
+    const stamp = toUtcStamp(new Date());
+    const desc = descLines.join("\\n");
     const ics = [
       "BEGIN:VCALENDAR",
       "VERSION:2.0",
@@ -247,7 +276,14 @@
         </button>
       </div>
       <button class="btn btn-ghost btn-sm" on:click={exportIcs} title="Download .ics for this slot">
-        Export
+        .ics
+      </button>
+      <button
+        class="btn btn-ghost btn-sm"
+        on:click={openGoogleCalendar}
+        title="Open in Google Calendar (pre-filled)"
+      >
+        Google
       </button>
       <button
         class="btn btn-ghost btn-sm"
