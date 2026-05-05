@@ -1482,6 +1482,12 @@ input, select {
   font-weight: 600;
   letter-spacing: -0.02em;
 }
+/* Tighten the type when the main label has minutes folded in (half/quarter
+   offset zones like 5:30 / 6:45) so it doesn't overflow the cell. */
+.wtb-cell-main.has-minute {
+  font-size: 14px;
+  letter-spacing: -0.03em;
+}
 .wtb-cell-sub {
   font-size: 11px;
   font-weight: 500;

@@ -334,7 +334,7 @@
               {#if c.minuteBadge}
                 <span class="wtb-cell-minute-badge" title="Half/quarter-hour offset zone">{c.minuteBadge}</span>
               {/if}
-              <span class="wtb-cell-main">{c.main}</span>
+              <span class="wtb-cell-main" class:has-minute={c.main.includes(":")}>{c.main}</span>
               <span class="wtb-cell-sub">{c.sub}</span>
             </button>
           {/each}
