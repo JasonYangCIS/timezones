@@ -12,6 +12,7 @@
   import SweetSpotList from "./lib/SweetSpotList.svelte";
   import MeetingStrip from "./lib/MeetingStrip.svelte";
   import StackedTimeline from "./lib/StackedTimeline.svelte";
+  import Settings from "./lib/icons/Settings.svelte";
 
   type Tweaks = { h24: boolean; theme: "light" | "dark"; duration: number };
   let tweaks: Tweaks = { h24: false, theme: "light", duration: 1 };
@@ -236,7 +237,7 @@
 
   <div class="tweaks-fab">
     <button class="btn btn-sm" on:click={() => (tweaksOpen = !tweaksOpen)}>
-      Tweaks
+      <Settings /> settings
     </button>
     {#if tweaksOpen}
       <div class="tweaks-panel">
@@ -293,12 +294,12 @@
 <style>
   .tweaks-fab {
     position: fixed;
-    right: 22px;
+    left: 22px;
     bottom: 22px;
     z-index: 100;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
     gap: 8px;
   }
   .tweaks-panel {
