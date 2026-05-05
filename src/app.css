@@ -1,25 +1,27 @@
 /* easy-timezones — calm, minimal aesthetic */
 
 :root {
-  /* Light theme */
-  --bg: #f7f6f3;
-  --surface: #ffffff;
-  --surface-2: #efeee9;
-  --surface-3: #e4e2dc;
-  --border: #d8d5cd;
-  --border-strong: #b8b4a9;
-  --text: #0d0d0b;
-  --text-2: #2d2c28;
-  --text-3: #555349;
-  --text-4: #7a776d;
-  --accent: #3a5732; /* deeper sage */
-  --accent-soft: #dde7d8;
-  --accent-strong: #2a4023;
-  --night: #c8c5bc;
-  --night-soft: #ddd9cf;
-  --sweet: #b6c8ac;
-  --sweet-strong: #6a8a5f;
-  --warning: #9c6f3f;
+  /* Light theme — "twilight" palette: warm parchment surfaces with a deep
+     dusk-plum accent so the chrome relates to the day-cycle band story
+     (sleep purple → wheat → daylight yellow → dusk mauve → night purple). */
+  --bg: #f5f1ea;
+  --surface: #fffdf8;
+  --surface-2: #ece5d8;
+  --surface-3: #ddd3c2;
+  --border: #d0c6b3;
+  --border-strong: #ada18a;
+  --text: #1a1320;
+  --text-2: #36303d;
+  --text-3: #5a5466;
+  --text-4: #8a8493;
+  --accent: #5d4174; /* dusk plum — ties to evening + night bands */
+  --accent-soft: #ebe2f1;
+  --accent-strong: #3e2754;
+  --night: #c2bcc8;
+  --night-soft: #d9d3df;
+  --sweet: #f0d496;     /* a slice of daylight — "good time" = sun is up */
+  --sweet-strong: #b88826;
+  --warning: #b07432;
   --shadow-sm: 0 1px 2px rgba(20, 20, 18, 0.06);
   --shadow-md: 0 1px 3px rgba(20, 20, 18, 0.08), 0 4px 12px rgba(20, 20, 18, 0.06);
   --shadow-lg: 0 2px 6px rgba(20, 20, 18, 0.08), 0 12px 32px rgba(20, 20, 18, 0.10);
@@ -29,23 +31,23 @@
 }
 
 [data-theme="dark"] {
-  --bg: #0e0f0d;
-  --surface: #1a1b18;
-  --surface-2: #232420;
-  --surface-3: #2e2f2a;
-  --border: #36372f;
-  --border-strong: #50514a;
-  --text: #f5f4ee;
-  --text-2: #d6d3c9;
-  --text-3: #9a978c;
-  --text-4: #66635c;
-  --accent: #b6d6a7;
-  --accent-soft: #2e3e29;
-  --accent-strong: #d2e6c5;
-  --night: #232420;
-  --night-soft: #1d1e1b;
-  --sweet: #4f6644;
-  --sweet-strong: #b6d6a7;
+  --bg: #0e0a14;
+  --surface: #181221;
+  --surface-2: #221a2e;
+  --surface-3: #2c2339;
+  --border: #382c47;
+  --border-strong: #564668;
+  --text: #f5f1f6;
+  --text-2: #dad4dd;
+  --text-3: #a09aa6;
+  --text-4: #6d6675;
+  --accent: #c9a8e1;
+  --accent-soft: #3e2754;
+  --accent-strong: #e6d3f0;
+  --night: #221a2e;
+  --night-soft: #181221;
+  --sweet: #5b4218;
+  --sweet-strong: #f0d496;
   --warning: #e8b988;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
   --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.4);
@@ -1215,18 +1217,21 @@ input, select {
    Light theme: sage for work (matches brand), warm cream for shoulders,
    muted terracotta for sleep — distinct from WTB's primary-blue palette. */
 :root {
-  --band-sleep-bg: #efe2d3;        /* warm desaturated sand */
-  --band-sleep-text: #7d5a3b;
-  --band-sleep-edge: #d9c2a6;
+  --band-sleep-bg: #6b5c84;        /* dusk purple — clearly off */
+  --band-sleep-text: #f1ecf7;
+  --band-sleep-edge: #4d4263;
+  --band-deep-night-bg: #2c2342;   /* deep night — 0–6am, looks bad on purpose */
+  --band-deep-night-text: #e9e2f4;
+  --band-deep-night-edge: #1a1430;
   --band-early-bg: #f3e9d2;        /* pale wheat */
   --band-early-text: #8a6a30;
   --band-early-edge: #d9c79a;
-  --band-work-bg: #cddec3;         /* sage (working) */
-  --band-work-text: #2d4422;
-  --band-work-edge: #a3bf94;
-  --band-evening-bg: #e3ead9;      /* pale sage */
-  --band-evening-text: #4f6748;
-  --band-evening-edge: #c5d3b6;
+  --band-work-bg: #fce29a;         /* warm daylight — sun on the desk */
+  --band-work-text: #5a3d08;
+  --band-work-edge: #e6c25a;
+  --band-evening-bg: #d6a9bc;      /* dusk mauve — bridges daylight → night */
+  --band-evening-text: #4a223a;
+  --band-evening-edge: #b3819a;
 
   --wtb-cell-h: 56px;
   --wtb-info-w: 232px;
@@ -1235,18 +1240,21 @@ input, select {
 }
 
 [data-theme="dark"] {
-  --band-sleep-bg: #2f261d;
-  --band-sleep-text: #c9a274;
-  --band-sleep-edge: #4a3a2a;
+  --band-sleep-bg: #2a2238;
+  --band-sleep-text: #b8a8d6;
+  --band-sleep-edge: #3d3151;
+  --band-deep-night-bg: #16101f;
+  --band-deep-night-text: #7a6c98;
+  --band-deep-night-edge: #221a30;
   --band-early-bg: #3a2f1f;
   --band-early-text: #d9b478;
   --band-early-edge: #564328;
-  --band-work-bg: #2c3d26;
-  --band-work-text: #b8d4a8;
-  --band-work-edge: #45593c;
-  --band-evening-bg: #232b1f;
-  --band-evening-text: #8aa080;
-  --band-evening-edge: #364030;
+  --band-work-bg: #3d2f10;
+  --band-work-text: #f1d989;
+  --band-work-edge: #5e4a18;
+  --band-evening-bg: #2e1d27;
+  --band-evening-text: #c89cae;
+  --band-evening-edge: #4a2e3e;
 }
 
 .wtb-card {
@@ -1321,6 +1329,22 @@ input, select {
   color: var(--bg);
 }
 .day-pill.is-today:hover { transform: translateY(-1px); }
+.day-pill.has-dst {
+  position: relative;
+}
+.day-pill-dst {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: var(--warning);
+  color: #fff;
+  line-height: 1.1;
+}
 .day-pill.is-weekend:not(.is-today) {
   color: var(--text-3);
 }
@@ -1429,7 +1453,9 @@ input, select {
   border: 0;
   border-radius: var(--wtb-radius);
   margin: 0 1.5px;
-  padding: 4px 2px;
+  /* Reserve top room for the absolute date badge on every cell so dated
+     and undated cells share the same vertical baseline for the time. */
+  padding: 12px 2px 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1458,6 +1484,12 @@ input, select {
   font-weight: 600;
   letter-spacing: -0.02em;
 }
+/* Tighten the type when the main label has minutes folded in (half/quarter
+   offset zones like 5:30 / 6:45) so it doesn't overflow the cell. */
+.wtb-cell-main.has-minute {
+  font-size: 14px;
+  letter-spacing: -0.03em;
+}
 .wtb-cell-sub {
   font-size: 11px;
   font-weight: 500;
@@ -1483,6 +1515,51 @@ input, select {
   background: linear-gradient(180deg, var(--band-evening-bg) 0%, color-mix(in oklab, var(--band-evening-bg), black 4%) 100%);
   color: var(--band-evening-text);
 }
+.wtb-cell.band-deep-night {
+  background: linear-gradient(180deg, var(--band-deep-night-bg) 0%, color-mix(in oklab, var(--band-deep-night-bg), black 8%) 100%);
+  color: var(--band-deep-night-text);
+}
+
+/* Weekend cells get a subtle diagonal hatch so Sat/Sun read different
+   from weekdays at a glance, regardless of the band underneath. */
+.wtb-cell.is-weekend {
+  background-image:
+    linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.06)),
+    repeating-linear-gradient(
+      135deg,
+      transparent 0,
+      transparent 6px,
+      rgba(0,0,0,0.045) 6px,
+      rgba(0,0,0,0.045) 7px
+    );
+}
+[data-theme="dark"] .wtb-cell.is-weekend {
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.05)),
+    repeating-linear-gradient(
+      135deg,
+      transparent 0,
+      transparent 6px,
+      rgba(255,255,255,0.05) 6px,
+      rgba(255,255,255,0.05) 7px
+    );
+}
+
+/* Half/quarter-hour offset badge on cells (e.g. Mumbai +30) */
+.wtb-cell-minute-badge {
+  position: absolute;
+  bottom: 3px;
+  left: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: color-mix(in oklab, currentColor, transparent 80%);
+  color: currentColor;
+  line-height: 1.1;
+  pointer-events: none;
+}
 
 /* Date pill sits as a small badge at the top of day-boundary cells */
 .wtb-cell.has-date-pill {
@@ -1504,7 +1581,9 @@ input, select {
   opacity: 0.9;
 }
 .wtb-cell.has-date-pill .wtb-cell-main {
-  margin-top: 8px;
+  /* Date pill is absolutely positioned at the top of the cell; don't nudge
+     the time down — keep it visually centered in the cell. */
+  margin-top: 0;
 }
 
 /* Time-of-day glyph at band transitions — small, top-right */
@@ -1554,39 +1633,75 @@ input, select {
 }
 
 .wtb-selection {
-  --wtb-sel-color: #4f46e5;
+  /* Coral — distinct from every time-of-day band (purple / wheat / yellow /
+     mauve), and warmer than the previous teal/blue. The selection now reads
+     as a "calendar event card" pinned over the timeline. */
+  --wtb-sel-color: #ff5a3c;
+  --wtb-sel-color-deep: #c43a22;
   position: absolute;
-  top: 4px;
-  bottom: 4px;
-  border: 2px solid var(--wtb-sel-color);
-  border-radius: 14px;
+  /* Stay inside the .wtb-card overflow box so the bottom flag is never clipped. */
+  top: 0;
+  bottom: 0;
+  border-radius: 6px;
+  /* Solid vertical rails on the sides; no top/bottom borders. The fill is a
+     soft tint so band colors underneath stay readable. */
+  border-left: 3px solid var(--wtb-sel-color);
+  border-right: 3px solid var(--wtb-sel-color);
   background:
     linear-gradient(180deg,
-      color-mix(in oklab, var(--wtb-sel-color), transparent 82%),
-      color-mix(in oklab, var(--wtb-sel-color), transparent 92%));
+      color-mix(in oklab, var(--wtb-sel-color), transparent 86%),
+      color-mix(in oklab, var(--wtb-sel-color), transparent 94%));
   pointer-events: auto;
   cursor: grab;
   box-shadow:
-    0 0 0 3px var(--surface),
-    0 0 0 4px color-mix(in oklab, var(--wtb-sel-color), transparent 70%),
-    0 10px 28px -8px color-mix(in oklab, var(--wtb-sel-color), transparent 45%),
-    inset 0 1px 0 color-mix(in oklab, #ffffff, transparent 70%);
+    /* subtle drop shadow gives the rail a "pinned card" lift */
+    0 6px 18px -6px color-mix(in oklab, var(--wtb-sel-color-deep), transparent 55%);
   transition: left 220ms cubic-bezier(0.22, 1, 0.36, 1), width 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* Top flag tab — a small downward-pointing tag that labels the column the way
+   a calendar event marker would. Its fill is the solid selection color. */
+.wtb-selection::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -3px;
+  right: -3px;
+  height: 10px;
+  background: var(--wtb-sel-color);
+  border-radius: 4px 4px 0 0;
+  /* Subtle notches at the bottom corners so the tab reads as a flag/ribbon. */
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 75% 60%, 25% 60%, 0 100%);
+}
+
+/* Matching bottom tab so the rail is symmetric and obviously a "pinned" item. */
+.wtb-selection::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -3px;
+  right: -3px;
+  height: 10px;
+  background: var(--wtb-sel-color);
+  border-radius: 0 0 4px 4px;
+  clip-path: polygon(0 0, 25% 40%, 75% 40%, 100% 0, 100% 100%, 0 100%);
+}
+
 .wtb-selection:hover {
+  background:
+    linear-gradient(180deg,
+      color-mix(in oklab, var(--wtb-sel-color), transparent 78%),
+      color-mix(in oklab, var(--wtb-sel-color), transparent 90%));
   box-shadow:
-    0 0 0 3px var(--surface),
-    0 0 0 5px color-mix(in oklab, var(--wtb-sel-color), transparent 55%),
-    0 14px 32px -8px color-mix(in oklab, var(--wtb-sel-color), transparent 35%),
-    inset 0 1px 0 color-mix(in oklab, #ffffff, transparent 65%);
+    0 10px 24px -6px color-mix(in oklab, var(--wtb-sel-color-deep), transparent 40%);
 }
 .wtb-selection:active {
   cursor: grabbing;
-  /* During an active drag, kill the tween so it tracks the cursor */
   transition: none;
 }
 [data-theme="dark"] .wtb-selection {
-  --wtb-sel-color: #818cf8;
+  --wtb-sel-color: #ff7a5e;
+  --wtb-sel-color-deep: #e0563a;
 }
 
 /* Track wrappers that match the cell region exactly. The row's cells use
@@ -1614,6 +1729,23 @@ input, select {
   border-left: 1.5px dashed color-mix(in oklab, var(--accent), transparent 30%);
   pointer-events: auto;
   z-index: 6;
+}
+/* Full-height NOW: line stretches across every row, not just the top label. */
+.wtb-now-layer.is-fullheight {
+  /* allow the line to extend across the entire .wtb-rows region */
+}
+.wtb-now-track.is-fullheight {
+  /* ensure no padding clips the vertical line */
+  padding: 0;
+  margin: 0 10px;
+  height: 100%;
+}
+.wtb-now-line.is-fullheight {
+  top: 0;
+  bottom: 0;
+  border-left-width: 2px;
+  border-left-style: solid;
+  border-left-color: color-mix(in oklab, var(--accent), transparent 55%);
 }
 .wtb-now-dot {
   position: absolute;
@@ -1654,6 +1786,35 @@ input, select {
 
 [data-theme="dark"] .wtb-hover-col { opacity: 0.10; }
 
+/* Resize handles on the selection band's left/right edges */
+.wtb-selection-resize {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  cursor: ew-resize;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.wtb-selection-resize::before {
+  content: "";
+  width: 3px;
+  height: 28px;
+  border-radius: 2px;
+  background: var(--wtb-sel-color, #4f46e5);
+  opacity: 0.55;
+  transition: opacity 120ms ease, height 120ms ease;
+}
+.wtb-selection-resize:hover::before {
+  opacity: 1;
+  height: 36px;
+}
+.wtb-selection-resize-left { left: -5px; }
+.wtb-selection-resize-right { right: -5px; }
+
 /* Selection handle (the three dots in the middle) */
 .wtb-selection-handle {
   position: absolute;
@@ -1679,6 +1840,7 @@ input, select {
 .legend-swatch.band-early { background: var(--band-early-bg); border-color: color-mix(in oklab, var(--band-early-bg), black 18%); }
 .legend-swatch.band-work { background: var(--band-work-bg); border-color: color-mix(in oklab, var(--band-work-bg), black 18%); }
 .legend-swatch.band-evening { background: var(--band-evening-bg); border-color: color-mix(in oklab, var(--band-evening-bg), black 18%); }
+.legend-swatch.band-deep-night { background: var(--band-deep-night-bg); border-color: color-mix(in oklab, var(--band-deep-night-bg), black 18%); }
 
 /* Responsive: stack info column more tightly when narrow */
 @media (max-width: 1100px) {
@@ -1880,4 +2042,96 @@ input, select {
 }
 .meeting-detail-status.warn {
   color: var(--warning);
+}
+
+/* ── Headline summary chips (per-zone times in the meeting strip) ────────── */
+.meeting-strip-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  row-gap: 4px;
+}
+.meeting-strip-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  background: var(--surface-2);
+  color: var(--text-2);
+  border: 1px solid var(--border);
+}
+.meeting-strip-chip.is-anchor {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  border-color: color-mix(in oklab, var(--accent), transparent 70%);
+}
+.meeting-strip-chip.band-work {
+  background: var(--band-work-bg);
+  color: var(--band-work-text);
+  border-color: var(--band-work-edge);
+}
+.meeting-strip-chip.band-early {
+  background: var(--band-early-bg);
+  color: var(--band-early-text);
+  border-color: var(--band-early-edge);
+}
+.meeting-strip-chip.band-evening {
+  background: var(--band-evening-bg);
+  color: var(--band-evening-text);
+  border-color: var(--band-evening-edge);
+}
+.meeting-strip-chip.band-sleep {
+  background: var(--band-sleep-bg);
+  color: var(--band-sleep-text);
+  border-color: var(--band-sleep-edge);
+}
+.meeting-strip-chip.band-deep-night {
+  background: var(--band-deep-night-bg);
+  color: var(--band-deep-night-text);
+  border-color: var(--band-deep-night-edge);
+}
+.meeting-strip-chip-time {
+  font-weight: 700;
+}
+.meeting-strip-chip-city {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.meeting-strip-chip-sep {
+  color: var(--text-4);
+  font-weight: 400;
+  align-self: center;
+}
+.meeting-strip-meta {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-3);
+  width: 100%;
+}
+.meeting-strip-fit {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+  cursor: help;
+}
+.meeting-strip-day-zone {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
+  margin-left: 4px;
+  letter-spacing: 0.01em;
 }

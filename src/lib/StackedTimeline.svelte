@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  export type Band = "sleep" | "early" | "work" | "evening";
+  export type Band = "deep-night" | "sleep" | "early" | "work" | "evening";
 
   export function bandFor(localHour: number, workStart: number, workEnd: number): Band {
     const earlyStart = (workStart - 2 + 24) % 24;
@@ -12,7 +12,21 @@
     if (inRange(localHour, workStart, workEnd)) return "work";
     if (inRange(localHour, earlyStart, workStart)) return "early";
     if (inRange(localHour, workEnd, eveningEnd)) return "evening";
+    // "Deep night" is the chunk of sleep centered on midnight (0–6am local).
+    // We surface this as a separate, much darker band so a 2am tile reads as
+    // obviously wrong vs. an 8pm late-evening one — the previous palette was
+    // too polite about bad hours.
+    if (localHour >= 0 && localHour < 6) return "deep-night";
     return "sleep";
+  }
+
+  // True when this localHour is also a half/quarter-hour offset zone tile
+  // (we still snap the grid to the hour, but flag the offset on the badge).
+  export function offsetMinuteBadge(minute: number): string | null {
+    if (minute === 30) return "+30";
+    if (minute === 45) return "+45";
+    if (minute === 15) return "+15";
+    return null;
   }
 </script>
 
@@ -39,6 +53,7 @@
   const dispatch = createEventDispatcher<{
     seek: number;
     shiftDay: number;
+    resize: number;
   }>();
 
   const HOURS = 24;
@@ -56,6 +71,20 @@
   $: hoursFromAnchor = anchorDate ? (now.getTime() - anchorDate.getTime()) / 3600000 : -1;
   $: showNow = hoursFromAnchor >= 0 && hoursFromAnchor <= HOURS;
 
+  // Detect DST shifts across all zones for a given day vs the previous day.
+  // Returns the list of zones whose UTC offset changes from yesterday → today.
+  function dstChangesForDay(day: Date) {
+    const yesterdayNoon = new Date(day.getTime() - 12 * 3600000);
+    const todayNoon = new Date(day.getTime() + 12 * 3600000);
+    const changes: { zone: Zone; from: number; to: number }[] = [];
+    for (const z of zones) {
+      const a = offsetMinutes(yesterdayNoon, z.tz);
+      const b = offsetMinutes(todayNoon, z.tz);
+      if (a !== b) changes.push({ zone: z, from: a, to: b });
+    }
+    return changes;
+  }
+
   // Day strip — relative to anchor.tz around anchorDate
   $: dayStrip = (() => {
     if (!anchor) return [];
@@ -66,7 +95,21 @@
       const local = partsInZone(d, anchor.tz);
       const isToday = i === 0;
       const isWeekend = local.weekday === "Sat" || local.weekday === "Sun";
-      arr.push({ d, local, offset: i, isToday, isWeekend });
+      const dstChanges = dstChangesForDay(new Date(anchorDate.getTime() + i * 86400000));
+      const dstTitle = dstChanges.length
+        ? "Clocks change today: " +
+          dstChanges
+            .map(
+              (c) =>
+                c.zone.city +
+                " shifts " +
+                ((c.to - c.from) / 60 > 0 ? "+" : "") +
+                ((c.to - c.from) / 60).toFixed(1) +
+                "h"
+            )
+            .join(", ")
+        : "";
+      arr.push({ d, local, offset: i, isToday, isWeekend, dst: dstChanges.length > 0, dstTitle });
     }
     return arr;
   })();
@@ -76,7 +119,10 @@
     dispatch("seek", Math.max(0, Math.min(HOURS - dur, h)));
   }
 
-  // Build per-row cell metadata
+  // Build per-row cell metadata. Cells stay aligned to UTC hour boundaries;
+  // for half/quarter-hour offset zones the minute is folded into the main
+  // label (e.g. "5:30" instead of "5") so the actual local time is visible
+  // without shifting the row.
   function buildCells(p: Zone, anchor: Date, use24: boolean) {
     const cells = [];
     let prevLocalDay: number | null = null;
@@ -90,18 +136,32 @@
       const showDatePill = isDayChange || isFirstCell;
       const datePillText = formatDateShort(d, p.tz).toUpperCase();
       const bandChangeTo = h > 0 && band !== prevBand ? band : null;
+      const isWeekend = local.weekday === "Sat" || local.weekday === "Sun";
+      const mm = String(local.minute).padStart(2, "0");
 
       let main: string, sub: string;
       if (use24) {
         main = String(local.hour).padStart(2, "0");
-        sub = String(local.minute).padStart(2, "0");
+        sub = mm;
       } else {
         const h12 = local.hour % 12 || 12;
-        main = String(h12);
+        // Fold the minute into the main label for half/quarter-hour zones.
+        main = local.minute === 0 ? String(h12) : String(h12) + ":" + mm;
         sub = local.hour < 12 ? "am" : "pm";
       }
 
-      cells.push({ h, band, bandChangeTo, showDatePill, datePillText, main, sub });
+      cells.push({
+        h,
+        band,
+        bandChangeTo,
+        showDatePill,
+        datePillText,
+        main,
+        sub,
+        isWeekend,
+        // Minute badge kept null — minute is now visible in the main label.
+        minuteBadge: null as string | null,
+      });
       prevLocalDay = local.day;
       prevBand = band;
     }
@@ -114,6 +174,18 @@
     const sign = off > 0 ? "+" : off < 0 ? "−" : "";
     const ah = Math.abs(off) / 60;
     return sign + (ah % 1 === 0 ? ah : ah.toFixed(1));
+  }
+
+  function rowDeltaTitle(p: Zone, isAnchor: boolean) {
+    if (isAnchor || !anchor) return "";
+    const off = offsetMinutes(now, p.tz) - anchorOffMin;
+    const ah = off / 60;
+    if (ah === 0) return p.city + " is the same time as " + anchor.city;
+    const abs = Math.abs(ah);
+    const hourWord = abs === 1 ? "hour" : "hours";
+    const dir = ah > 0 ? "ahead of" : "behind";
+    const pretty = abs % 1 === 0 ? abs : abs.toFixed(1);
+    return p.city + " is " + pretty + " " + hourWord + " " + dir + " " + anchor.city;
   }
 
   // Selection drag
@@ -133,10 +205,47 @@
       const dxPct = (dx / rect.width) * 100;
       let newPct = startLeftPct + dxPct;
       let newHour = (newPct / 100) * HOURS;
-      // Snap to 30-minute (0.5h) increments while dragging.
       newHour = Math.round(newHour * 2) / 2;
       newHour = Math.max(0, Math.min(HOURS - selectedDurationH, newHour));
       dispatch("seek", newHour);
+    }
+    function up() {
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("mouseup", up);
+    }
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", up);
+  }
+
+  // Resize selection by dragging the left or right edge handle.
+  function startResize(side: "left" | "right", e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    const handleEl = e.currentTarget as HTMLElement;
+    const trackParent = handleEl.closest(".wtb-selection-track") as HTMLElement | null;
+    if (!trackParent) return;
+    const rect = trackParent.getBoundingClientRect();
+    const startX = e.clientX;
+    const startStart = selectedStartUTC;
+    const startDur = selectedDurationH;
+
+    function move(ev: MouseEvent) {
+      const dx = ev.clientX - startX;
+      const dHours = (dx / rect.width) * HOURS;
+      // Snap to 30-minute increments
+      const snap = (n: number) => Math.round(n * 2) / 2;
+      if (side === "left") {
+        let newStart = snap(startStart + dHours);
+        // Clamp so width stays >= 0.5h and within bounds
+        newStart = Math.max(0, Math.min(startStart + startDur - 0.5, newStart));
+        const newDur = startDur - (newStart - startStart);
+        dispatch("seek", newStart);
+        dispatch("resize", newDur);
+      } else {
+        let newDur = snap(startDur + dHours);
+        newDur = Math.max(0.5, Math.min(HOURS - startStart, newDur));
+        dispatch("resize", newDur);
+      }
     }
     function up() {
       window.removeEventListener("mousemove", move);
@@ -156,16 +265,20 @@
   <div class="wtb-day-strip-row">
     <div class="wtb-info-spacer">Local time</div>
     <div class="day-strip">
-      {#each dayStrip as { d, local, offset, isToday, isWeekend } (offset)}
+      {#each dayStrip as { d, local, offset, isToday, isWeekend, dst, dstTitle } (offset)}
         <button
           class="day-pill"
           class:is-today={isToday}
           class:is-weekend={isWeekend}
+          class:has-dst={dst}
           on:click={() => dispatch("shiftDay", offset)}
-          title={anchor ? formatDateLong(d, anchor.tz) : ""}
+          title={dst ? dstTitle : anchor ? formatDateLong(d, anchor.tz) : ""}
         >
           <span class="day-pill-dow">{local.weekday}</span>
           <span class="day-pill-num">{local.day}</span>
+          {#if dst}
+            <span class="day-pill-dst" aria-label="DST change">DST</span>
+          {/if}
         </button>
       {/each}
     </div>
@@ -185,7 +298,7 @@
           <div class="wtb-row-info-meta">
             <div class="wtb-row-name">
               {#if !isAnchor && deltaStr}
-                <span class="wtb-row-delta">{deltaStr}</span>
+                <span class="wtb-row-delta" title={rowDeltaTitle(p, isAnchor)}>{deltaStr}</span>
               {/if}
               <span class="wtb-row-city">{p.city}</span>
             </div>
@@ -205,6 +318,7 @@
               class:is-in-selection={c.h >= startInt && c.h < endInt}
               class:has-date-pill={c.showDatePill}
               class:has-band-glyph={!!c.bandChangeTo}
+              class:is-weekend={c.isWeekend}
               on:click={() => pickHour(c.h)}
               on:mouseenter={() => (hoverH = c.h)}
               on:mouseleave={() => (hoverH = null)}
@@ -217,7 +331,10 @@
                   <BandGlyph band={c.bandChangeTo} />
                 </span>
               {/if}
-              <span class="wtb-cell-main">{c.main}</span>
+              {#if c.minuteBadge}
+                <span class="wtb-cell-minute-badge" title="Half/quarter-hour offset zone">{c.minuteBadge}</span>
+              {/if}
+              <span class="wtb-cell-main" class:has-minute={c.main.includes(":")}>{c.main}</span>
               <span class="wtb-cell-sub">{c.sub}</span>
             </button>
           {/each}
@@ -232,16 +349,25 @@
           class="wtb-selection"
           style="left: {selStartPct}%; width: {selWidthPct}%"
           on:mousedown={startDragging}
-          title="Drag to slide the selected window"
+          title="Drag to slide · grab edges to resize"
           role="slider"
           aria-valuemin="0"
           aria-valuemax="24"
           aria-valuenow={selectedStartUTC}
           tabindex="0"
         >
-          <span class="wtb-selection-handle" aria-hidden="true">
-            <span></span><span></span><span></span>
-          </span>
+          <span
+            class="wtb-selection-resize wtb-selection-resize-left"
+            on:mousedown={(e) => startResize("left", e)}
+            title="Drag to change start"
+            aria-hidden="true"
+          ></span>
+          <span
+            class="wtb-selection-resize wtb-selection-resize-right"
+            on:mousedown={(e) => startResize("right", e)}
+            title="Drag to change end"
+            aria-hidden="true"
+          ></span>
         </div>
       </div>
     </div>
@@ -259,11 +385,11 @@
     {/if}
 
     {#if showNow && anchor}
-      <div class="wtb-now-layer">
+      <div class="wtb-now-layer is-fullheight">
         <div class="wtb-now-spacer"></div>
-        <div class="wtb-now-track">
+        <div class="wtb-now-track is-fullheight">
           <div
-            class="wtb-now-line"
+            class="wtb-now-line is-fullheight"
             style="left: {(hoursFromAnchor / HOURS) * 100}%"
             title={"Now · " +
               formatHour(
