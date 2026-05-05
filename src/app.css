@@ -1227,9 +1227,9 @@ input, select {
   --band-work-bg: #fce29a;         /* warm daylight — sun on the desk */
   --band-work-text: #5a3d08;
   --band-work-edge: #e6c25a;
-  --band-evening-bg: #f4b89c;      /* sunset peach — bridges yellow → purple */
-  --band-evening-text: #5a2818;
-  --band-evening-edge: #dd9170;
+  --band-evening-bg: #d6a9bc;      /* dusk mauve — bridges daylight → night */
+  --band-evening-text: #4a223a;
+  --band-evening-edge: #b3819a;
 
   --wtb-cell-h: 56px;
   --wtb-info-w: 232px;
@@ -1250,9 +1250,9 @@ input, select {
   --band-work-bg: #3d2f10;
   --band-work-text: #f1d989;
   --band-work-edge: #5e4a18;
-  --band-evening-bg: #3a2218;
-  --band-evening-text: #e8a884;
-  --band-evening-edge: #5a3424;
+  --band-evening-bg: #2e1d27;
+  --band-evening-text: #c89cae;
+  --band-evening-edge: #4a2e3e;
 }
 
 .wtb-card {
