@@ -1215,12 +1215,12 @@ input, select {
    Light theme: sage for work (matches brand), warm cream for shoulders,
    muted terracotta for sleep — distinct from WTB's primary-blue palette. */
 :root {
-  --band-sleep-bg: #b9a487;        /* desaturated dark sand — clearly off */
-  --band-sleep-text: #2e1f12;
-  --band-sleep-edge: #8c7959;
-  --band-deep-night-bg: #4a3f31;   /* deep night — 0–6am, looks bad on purpose */
-  --band-deep-night-text: #efe1c8;
-  --band-deep-night-edge: #2a2218;
+  --band-sleep-bg: #6b5c84;        /* dusk purple — clearly off */
+  --band-sleep-text: #f1ecf7;
+  --band-sleep-edge: #4d4263;
+  --band-deep-night-bg: #2c2342;   /* deep night — 0–6am, looks bad on purpose */
+  --band-deep-night-text: #e9e2f4;
+  --band-deep-night-edge: #1a1430;
   --band-early-bg: #f3e9d2;        /* pale wheat */
   --band-early-text: #8a6a30;
   --band-early-edge: #d9c79a;
@@ -1238,12 +1238,12 @@ input, select {
 }
 
 [data-theme="dark"] {
-  --band-sleep-bg: #1f1a13;
-  --band-sleep-text: #a8845a;
-  --band-sleep-edge: #322a1f;
-  --band-deep-night-bg: #0c0a07;
-  --band-deep-night-text: #6c5a3e;
-  --band-deep-night-edge: #1d1810;
+  --band-sleep-bg: #2a2238;
+  --band-sleep-text: #b8a8d6;
+  --band-sleep-edge: #3d3151;
+  --band-deep-night-bg: #16101f;
+  --band-deep-night-text: #7a6c98;
+  --band-deep-night-edge: #221a30;
   --band-early-bg: #3a2f1f;
   --band-early-text: #d9b478;
   --band-early-edge: #564328;

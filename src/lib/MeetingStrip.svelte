@@ -46,9 +46,16 @@
           .map((s) => s[0])
           .join("")
           .toUpperCase();
+        // Always render the chip time as zero-padded HH:MM (regardless of the
+        // user's 12h/24h preference for other surfaces) so chip widths are
+        // identical across zones and the strip doesn't shift on selection.
+        const padded =
+          String(sLocal.hour).padStart(2, "0") + ":" + String(sLocal.minute).padStart(2, "0");
         return {
           zone: p,
-          timeStr: formatHour(startHour, h24),
+          timeStr: padded,
+          // Keep the localized form for tooltips / accessibility.
+          timeStrLocalized: formatHour(startHour, h24),
           short: initials,
           band,
           inWork,
@@ -197,7 +204,7 @@
             class={"meeting-strip-chip band-" + c.band}
             class:is-anchor={i === 0}
             class:in-work={c.inWork}
-            title={c.zone.city + " · " + c.timeStr}
+            title={c.zone.city + " · " + c.timeStrLocalized}
           >
             <span class="meeting-strip-chip-time">{c.timeStr}</span>
             <span class="meeting-strip-chip-city">{c.short}</span>
