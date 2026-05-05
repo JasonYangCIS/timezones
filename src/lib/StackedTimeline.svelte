@@ -119,22 +119,40 @@
     dispatch("seek", Math.max(0, Math.min(HOURS - dur, h)));
   }
 
-  // Build per-row cell metadata
+  // Build per-row cell metadata.
+  // For zones whose local time is offset by a non-integer number of hours
+  // (Mumbai +5:30, Kathmandu +5:45, Newfoundland −3:30, etc.) we shift the
+  // cells so each one starts on a *local* hour boundary. The whole row is
+  // then visually offset to the right by that fraction of an hour, so the
+  // local "6am" tile sits where 6am actually occurs in real time.
   function buildCells(p: Zone, anchor: Date, use24: boolean) {
     const cells = [];
     let prevLocalDay: number | null = null;
     let prevBand: Band | null = null;
     let prevWeekday: string | null = null;
-    for (let h = 0; h < HOURS; h++) {
-      const d = new Date(anchor.getTime() + h * 3600000);
+
+    // Local minute at the row's left edge (UTC anchor). 0 for whole-hour
+    // zones, 30 for +5:30, 45 for +5:45, 15 for the ones at +/-h:15.
+    const initialLocal = partsInZone(anchor, p.tz);
+    const minute0 = initialLocal.minute;
+    const startOffsetHours = minute0 === 0 ? 0 : (60 - minute0) / 60;
+    // Each cell is 1h wide. Cap so we don't render past the 24h window.
+    const cellCount = Math.max(0, Math.floor(HOURS - startOffsetHours + 1e-6));
+
+    for (let i = 0; i < cellCount; i++) {
+      const hOff = startOffsetHours + i;
+      const d = new Date(anchor.getTime() + hOff * 3600000);
       const local = partsInZone(d, p.tz);
       const band = bandFor(local.hour, p.workStart, p.workEnd);
       const isDayChange = prevLocalDay !== null && local.day !== prevLocalDay;
-      const isFirstCell = h === 0;
+      const isFirstCell = i === 0;
       const showDatePill = isDayChange || isFirstCell;
       const datePillText = formatDateShort(d, p.tz).toUpperCase();
-      const bandChangeTo = h > 0 && band !== prevBand ? band : null;
+      const bandChangeTo = i > 0 && band !== prevBand ? band : null;
       const isWeekend = local.weekday === "Sat" || local.weekday === "Sun";
+      // The minute badge is no longer needed for shifted rows — the cell
+      // itself is now aligned to local hours. Keep it only in the rare case
+      // we still see a non-zero minute (defensive).
       const minuteBadge = offsetMinuteBadge(local.minute);
 
       let main: string, sub: string;
@@ -148,7 +166,7 @@
       }
 
       cells.push({
-        h,
+        h: hOff,
         band,
         bandChangeTo,
         showDatePill,
@@ -162,7 +180,9 @@
       prevBand = band;
       prevWeekday = local.weekday;
     }
-    return cells;
+    // 96-col grid (15-min resolution) — first cell positioned via grid-column-start.
+    const startCol = Math.round(startOffsetHours * 4) + 1;
+    return { cells, startCol, startOffsetHours };
   }
 
   function rowDelta(p: Zone, isAnchor: boolean) {
@@ -284,7 +304,9 @@
   <div class="wtb-rows" style="position: relative">
     {#each zones as p, i (p.id)}
       {@const isAnchor = i === 0}
-      {@const cells = buildCells(p, anchorDate, h24)}
+      {@const built = buildCells(p, anchorDate, h24)}
+      {@const cells = built.cells}
+      {@const rowStartCol = built.startCol}
       {@const nowLocal = partsInZone(now, p.tz)}
       {@const nowStr = formatHour(nowLocal.hour + nowLocal.minute / 60, h24)}
       {@const offMin = offsetMinutes(now, p.tz)}
@@ -307,15 +329,16 @@
           </div>
         </div>
         <div class="wtb-row-cells">
-          {#each cells as c (c.h)}
+          {#each cells as c, ci (c.h)}
             <button
               type="button"
               class={"wtb-cell band-" + c.band}
-              class:is-selected-start={c.h === startInt}
-              class:is-in-selection={c.h >= startInt && c.h < endInt}
+              class:is-selected-start={Math.floor(c.h) === startInt}
+              class:is-in-selection={c.h + 1 > selectedStartUTC && c.h < selectedStartUTC + selectedDurationH}
               class:has-date-pill={c.showDatePill}
               class:has-band-glyph={!!c.bandChangeTo}
               class:is-weekend={c.isWeekend}
+              style={ci === 0 && rowStartCol > 1 ? `grid-column-start: ${rowStartCol}` : undefined}
               on:click={() => pickHour(c.h)}
               on:mouseenter={() => (hoverH = c.h)}
               on:mouseleave={() => (hoverH = null)}

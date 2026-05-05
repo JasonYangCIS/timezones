@@ -1440,12 +1440,20 @@ input, select {
 /* ── Cell strip ───────────────────────────────────────────── */
 .wtb-row-cells {
   display: grid;
-  grid-template-columns: repeat(24, minmax(var(--wtb-cell-min), 1fr));
+  /* 96-col subdivision (15-min resolution) so we can place rows for half- and
+     quarter-hour offset zones (Mumbai +5:30, Kathmandu +5:45, Newfoundland
+     −3:30) on local-hour boundaries. Each cell spans 4 of these mini-columns
+     (= 1 hour). The first cell in a shifted row is placed with an inline
+     grid-column-start to push it to the right local-hour boundary. */
+  grid-template-columns: repeat(96, minmax(calc(var(--wtb-cell-min) / 4), 1fr));
   gap: 0;
   padding: 8px 10px;
   background: var(--surface);
   position: relative;
   z-index: 1;
+}
+.wtb-cell {
+  grid-column: span 4;
 }
 
 .wtb-cell {
