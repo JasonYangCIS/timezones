@@ -359,9 +359,6 @@
             title="Drag to change start"
             aria-hidden="true"
           ></span>
-          <span class="wtb-selection-handle" aria-hidden="true">
-            <span></span><span></span><span></span>
-          </span>
           <span
             class="wtb-selection-resize wtb-selection-resize-right"
             on:mousedown={(e) => startResize("right", e)}
