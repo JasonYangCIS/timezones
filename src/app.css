@@ -1453,7 +1453,9 @@ input, select {
   border: 0;
   border-radius: var(--wtb-radius);
   margin: 0 1.5px;
-  padding: 4px 2px;
+  /* Reserve top room for the absolute date badge on every cell so dated
+     and undated cells share the same vertical baseline for the time. */
+  padding: 12px 2px 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1564,10 +1566,6 @@ input, select {
   /* Slight visual emphasis so the day-change is easy to spot */
   outline: 1.5px solid color-mix(in oklab, currentColor, transparent 70%);
   outline-offset: -2px;
-  /* Extra top padding shifts the flex-centered time down a few px so it
-     doesn't crowd the absolute date badge above. */
-  padding-top: 12px;
-  padding-bottom: 4px;
 }
 .wtb-cell-datepill {
   position: absolute;
