@@ -1623,10 +1623,10 @@ input, select {
 }
 
 .wtb-selection {
-  /* Pine teal — sits opposite the warm purple/yellow band palette so the
+  /* Sky blue — sits opposite the warm purple/yellow band palette so the
      scrubber column reads as a UI control, not as another time-of-day band. */
-  --wtb-sel-color: #0e7c8a;
-  --wtb-sel-color-bright: #18b3c1;
+  --wtb-sel-color: #18b6f6;
+  --wtb-sel-color-bright: #6fd3ff;
   position: absolute;
   top: 2px;
   bottom: 2px;
@@ -1680,8 +1680,8 @@ input, select {
   transition: none;
 }
 [data-theme="dark"] .wtb-selection {
-  --wtb-sel-color: #5fd0d3;
-  --wtb-sel-color-bright: #9eecef;
+  --wtb-sel-color: #4ec3ff;
+  --wtb-sel-color-bright: #a8e0ff;
 }
 
 /* Track wrappers that match the cell region exactly. The row's cells use
