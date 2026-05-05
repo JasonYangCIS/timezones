@@ -236,7 +236,7 @@
 
   <div class="tweaks-fab">
     <button class="btn btn-sm" on:click={() => (tweaksOpen = !tweaksOpen)}>
-      Tweaks
+      settings
     </button>
     {#if tweaksOpen}
       <div class="tweaks-panel">
