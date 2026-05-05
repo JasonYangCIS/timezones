@@ -1224,9 +1224,9 @@ input, select {
   --band-early-bg: #f3e9d2;        /* pale wheat */
   --band-early-text: #8a6a30;
   --band-early-edge: #d9c79a;
-  --band-work-bg: #cddec3;         /* sage (working) */
-  --band-work-text: #2d4422;
-  --band-work-edge: #a3bf94;
+  --band-work-bg: #fce29a;         /* warm daylight — sun on the desk */
+  --band-work-text: #5a3d08;
+  --band-work-edge: #e6c25a;
   --band-evening-bg: #e3ead9;      /* pale sage */
   --band-evening-text: #4f6748;
   --band-evening-edge: #c5d3b6;
@@ -1247,9 +1247,9 @@ input, select {
   --band-early-bg: #3a2f1f;
   --band-early-text: #d9b478;
   --band-early-edge: #564328;
-  --band-work-bg: #2c3d26;
-  --band-work-text: #b8d4a8;
-  --band-work-edge: #45593c;
+  --band-work-bg: #3d2f10;
+  --band-work-text: #f1d989;
+  --band-work-edge: #5e4a18;
   --band-evening-bg: #232b1f;
   --band-evening-text: #8aa080;
   --band-evening-edge: #364030;
