@@ -1254,8 +1254,15 @@ input, select {
   border: 1px solid var(--border);
   border-radius: 18px;
   box-shadow: var(--shadow-md);
-  overflow: hidden;
-  min-width: 720px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.wtb-card .wtb-day-strip-row,
+.wtb-card .wtb-rows {
+  /* Keep the cell grid at its full intrinsic width so the absolutely-
+     positioned selection / hover / now overlays (which span .wtb-rows)
+     stay perfectly aligned with the cells underneath. */
+  min-width: calc(var(--wtb-info-w) + (var(--wtb-cell-min) * 24) + 28px);
 }
 
 /* ── Day strip row at top ─────────────────────────────────── */
