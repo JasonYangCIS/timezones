@@ -1629,8 +1629,9 @@ input, select {
   --wtb-sel-color: #ff5a3c;
   --wtb-sel-color-deep: #c43a22;
   position: absolute;
-  top: -10px;
-  bottom: -10px;
+  /* Stay inside the .wtb-card overflow box so the bottom flag is never clipped. */
+  top: 0;
+  bottom: 0;
   border-radius: 6px;
   /* Solid vertical rails on the sides; no top/bottom borders. The fill is a
      soft tint so band colors underneath stay readable. */
@@ -1653,7 +1654,7 @@ input, select {
 .wtb-selection::before {
   content: "";
   position: absolute;
-  top: -6px;
+  top: 0;
   left: -3px;
   right: -3px;
   height: 10px;
@@ -1667,7 +1668,7 @@ input, select {
 .wtb-selection::after {
   content: "";
   position: absolute;
-  bottom: -6px;
+  bottom: 0;
   left: -3px;
   right: -3px;
   height: 10px;
