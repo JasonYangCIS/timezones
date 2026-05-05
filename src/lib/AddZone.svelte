@@ -8,7 +8,21 @@
     type Zone,
     type TzPreset,
   } from "./data";
+  import { CAPITAL_PRESETS } from "./capitals";
   import Plus from "./icons/Plus.svelte";
+
+  // Merge curated presets + every country capital, deduped by city+tz pair.
+  const ALL_PRESETS: TzPreset[] = (() => {
+    const seen = new Set<string>();
+    const out: TzPreset[] = [];
+    for (const p of [...TZ_PRESETS, ...CAPITAL_PRESETS]) {
+      const key = `${p.city.toLowerCase()}|${p.tz}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(p);
+    }
+    return out;
+  })();
 
   const dispatch = createEventDispatcher<{ add: Zone }>();
 
@@ -19,11 +33,12 @@
   let wrapEl: HTMLDivElement | null = null;
 
   $: matches = (() => {
+    // With no query, show the curated short list so the dropdown stays familiar.
     if (!q.trim()) return TZ_PRESETS.slice(0, 8);
     const lower = q.trim().toLowerCase();
     // Match abbreviations like PDT/EST/JST against IANA tz ids.
     const abbrevTzs = new Set(TZ_ABBREVIATIONS[lower] ?? []);
-    return TZ_PRESETS.filter(
+    return ALL_PRESETS.filter(
       (p) =>
         p.city.toLowerCase().includes(lower) ||
         p.region.toLowerCase().includes(lower) ||
