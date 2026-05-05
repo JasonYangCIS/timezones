@@ -22,6 +22,7 @@
         class="sweet-pill"
         class:active={isSel}
         on:click={() => dispatch("pick", s.startUTC)}
+        title={"Click to snap the selection here. Fit % = share of half-hour slots in this window where everyone is inside their own working hours."}
       >
         <span class="sweet-pill-time">
           {formatHour(s.startUTC % 24, h24)} – {formatHour(s.endUTC % 24, h24)} UTC

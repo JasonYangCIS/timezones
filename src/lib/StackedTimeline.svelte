@@ -53,6 +53,7 @@
   const dispatch = createEventDispatcher<{
     seek: number;
     shiftDay: number;
+    resize: number;
   }>();
 
   const HOURS = 24;
@@ -236,11 +237,11 @@
         newStart = Math.max(0, Math.min(startStart + startDur - 0.5, newStart));
         const newDur = startDur - (newStart - startStart);
         dispatch("seek", newStart);
-        dispatch("resize" as any, newDur);
+        dispatch("resize", newDur);
       } else {
         let newDur = snap(startDur + dHours);
         newDur = Math.max(0.5, Math.min(HOURS - startStart, newDur));
-        dispatch("resize" as any, newDur);
+        dispatch("resize", newDur);
       }
     }
     function up() {

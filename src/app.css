@@ -1215,9 +1215,12 @@ input, select {
    Light theme: sage for work (matches brand), warm cream for shoulders,
    muted terracotta for sleep — distinct from WTB's primary-blue palette. */
 :root {
-  --band-sleep-bg: #efe2d3;        /* warm desaturated sand */
-  --band-sleep-text: #7d5a3b;
-  --band-sleep-edge: #d9c2a6;
+  --band-sleep-bg: #b9a487;        /* desaturated dark sand — clearly off */
+  --band-sleep-text: #2e1f12;
+  --band-sleep-edge: #8c7959;
+  --band-deep-night-bg: #4a3f31;   /* deep night — 0–6am, looks bad on purpose */
+  --band-deep-night-text: #efe1c8;
+  --band-deep-night-edge: #2a2218;
   --band-early-bg: #f3e9d2;        /* pale wheat */
   --band-early-text: #8a6a30;
   --band-early-edge: #d9c79a;
@@ -1235,9 +1238,12 @@ input, select {
 }
 
 [data-theme="dark"] {
-  --band-sleep-bg: #2f261d;
-  --band-sleep-text: #c9a274;
-  --band-sleep-edge: #4a3a2a;
+  --band-sleep-bg: #1f1a13;
+  --band-sleep-text: #a8845a;
+  --band-sleep-edge: #322a1f;
+  --band-deep-night-bg: #0c0a07;
+  --band-deep-night-text: #6c5a3e;
+  --band-deep-night-edge: #1d1810;
   --band-early-bg: #3a2f1f;
   --band-early-text: #d9b478;
   --band-early-edge: #564328;
@@ -1321,6 +1327,22 @@ input, select {
   color: var(--bg);
 }
 .day-pill.is-today:hover { transform: translateY(-1px); }
+.day-pill.has-dst {
+  position: relative;
+}
+.day-pill-dst {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: var(--warning);
+  color: #fff;
+  line-height: 1.1;
+}
 .day-pill.is-weekend:not(.is-today) {
   color: var(--text-3);
 }
@@ -1483,6 +1505,51 @@ input, select {
   background: linear-gradient(180deg, var(--band-evening-bg) 0%, color-mix(in oklab, var(--band-evening-bg), black 4%) 100%);
   color: var(--band-evening-text);
 }
+.wtb-cell.band-deep-night {
+  background: linear-gradient(180deg, var(--band-deep-night-bg) 0%, color-mix(in oklab, var(--band-deep-night-bg), black 8%) 100%);
+  color: var(--band-deep-night-text);
+}
+
+/* Weekend cells get a subtle diagonal hatch so Sat/Sun read different
+   from weekdays at a glance, regardless of the band underneath. */
+.wtb-cell.is-weekend {
+  background-image:
+    linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.06)),
+    repeating-linear-gradient(
+      135deg,
+      transparent 0,
+      transparent 6px,
+      rgba(0,0,0,0.045) 6px,
+      rgba(0,0,0,0.045) 7px
+    );
+}
+[data-theme="dark"] .wtb-cell.is-weekend {
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.05)),
+    repeating-linear-gradient(
+      135deg,
+      transparent 0,
+      transparent 6px,
+      rgba(255,255,255,0.05) 6px,
+      rgba(255,255,255,0.05) 7px
+    );
+}
+
+/* Half/quarter-hour offset badge on cells (e.g. Mumbai +30) */
+.wtb-cell-minute-badge {
+  position: absolute;
+  bottom: 3px;
+  left: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: color-mix(in oklab, currentColor, transparent 80%);
+  color: currentColor;
+  line-height: 1.1;
+  pointer-events: none;
+}
 
 /* Date pill sits as a small badge at the top of day-boundary cells */
 .wtb-cell.has-date-pill {
@@ -1615,6 +1682,23 @@ input, select {
   pointer-events: auto;
   z-index: 6;
 }
+/* Full-height NOW: line stretches across every row, not just the top label. */
+.wtb-now-layer.is-fullheight {
+  /* allow the line to extend across the entire .wtb-rows region */
+}
+.wtb-now-track.is-fullheight {
+  /* ensure no padding clips the vertical line */
+  padding: 0;
+  margin: 0 10px;
+  height: 100%;
+}
+.wtb-now-line.is-fullheight {
+  top: 0;
+  bottom: 0;
+  border-left-width: 2px;
+  border-left-style: solid;
+  border-left-color: color-mix(in oklab, var(--accent), transparent 55%);
+}
 .wtb-now-dot {
   position: absolute;
   top: -4px;
@@ -1654,6 +1738,35 @@ input, select {
 
 [data-theme="dark"] .wtb-hover-col { opacity: 0.10; }
 
+/* Resize handles on the selection band's left/right edges */
+.wtb-selection-resize {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  cursor: ew-resize;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.wtb-selection-resize::before {
+  content: "";
+  width: 3px;
+  height: 28px;
+  border-radius: 2px;
+  background: var(--wtb-sel-color, #4f46e5);
+  opacity: 0.55;
+  transition: opacity 120ms ease, height 120ms ease;
+}
+.wtb-selection-resize:hover::before {
+  opacity: 1;
+  height: 36px;
+}
+.wtb-selection-resize-left { left: -5px; }
+.wtb-selection-resize-right { right: -5px; }
+
 /* Selection handle (the three dots in the middle) */
 .wtb-selection-handle {
   position: absolute;
@@ -1679,6 +1792,7 @@ input, select {
 .legend-swatch.band-early { background: var(--band-early-bg); border-color: color-mix(in oklab, var(--band-early-bg), black 18%); }
 .legend-swatch.band-work { background: var(--band-work-bg); border-color: color-mix(in oklab, var(--band-work-bg), black 18%); }
 .legend-swatch.band-evening { background: var(--band-evening-bg); border-color: color-mix(in oklab, var(--band-evening-bg), black 18%); }
+.legend-swatch.band-deep-night { background: var(--band-deep-night-bg); border-color: color-mix(in oklab, var(--band-deep-night-bg), black 18%); }
 
 /* Responsive: stack info column more tightly when narrow */
 @media (max-width: 1100px) {
@@ -1880,4 +1994,89 @@ input, select {
 }
 .meeting-detail-status.warn {
   color: var(--warning);
+}
+
+/* ── Headline summary chips (per-zone times in the meeting strip) ────────── */
+.meeting-strip-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  row-gap: 4px;
+}
+.meeting-strip-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  background: var(--surface-2);
+  color: var(--text-2);
+  border: 1px solid var(--border);
+}
+.meeting-strip-chip.is-anchor {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  border-color: color-mix(in oklab, var(--accent), transparent 70%);
+}
+.meeting-strip-chip.band-work {
+  background: var(--band-work-bg);
+  color: var(--band-work-text);
+  border-color: var(--band-work-edge);
+}
+.meeting-strip-chip.band-early {
+  background: var(--band-early-bg);
+  color: var(--band-early-text);
+  border-color: var(--band-early-edge);
+}
+.meeting-strip-chip.band-evening {
+  background: var(--band-evening-bg);
+  color: var(--band-evening-text);
+  border-color: var(--band-evening-edge);
+}
+.meeting-strip-chip.band-sleep {
+  background: var(--band-sleep-bg);
+  color: var(--band-sleep-text);
+  border-color: var(--band-sleep-edge);
+}
+.meeting-strip-chip.band-deep-night {
+  background: var(--band-deep-night-bg);
+  color: var(--band-deep-night-text);
+  border-color: var(--band-deep-night-edge);
+}
+.meeting-strip-chip-time {
+  font-weight: 700;
+}
+.meeting-strip-chip-city {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.meeting-strip-chip-sep {
+  color: var(--text-4);
+  font-weight: 400;
+  align-self: center;
+}
+.meeting-strip-meta {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-3);
+  width: 100%;
+}
+.meeting-strip-fit {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+  cursor: help;
 }

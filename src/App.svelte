@@ -211,6 +211,7 @@
           <div class="legend-item"><span class="legend-swatch band-early"></span><span>Early (2h before)</span></div>
           <div class="legend-item"><span class="legend-swatch band-evening"></span><span>Evening (4h after)</span></div>
           <div class="legend-item"><span class="legend-swatch band-sleep"></span><span>Off / sleep</span></div>
+          <div class="legend-item"><span class="legend-swatch band-deep-night"></span><span>Deep night (0–6am)</span></div>
         </div>
       </div>
     </aside>
