@@ -77,12 +77,12 @@
   }
 
   // Build per-row cell metadata
-  function buildCells(p: Zone) {
+  function buildCells(p: Zone, anchor: Date, use24: boolean) {
     const cells = [];
     let prevLocalDay: number | null = null;
     let prevBand: Band | null = null;
     for (let h = 0; h < HOURS; h++) {
-      const d = new Date(anchorDate.getTime() + h * 3600000);
+      const d = new Date(anchor.getTime() + h * 3600000);
       const local = partsInZone(d, p.tz);
       const band = bandFor(local.hour, p.workStart, p.workEnd);
       const isDayChange = prevLocalDay !== null && local.day !== prevLocalDay;
@@ -92,7 +92,7 @@
       const bandChangeTo = h > 0 && band !== prevBand ? band : null;
 
       let main: string, sub: string;
-      if (h24) {
+      if (use24) {
         main = String(local.hour).padStart(2, "0");
         sub = String(local.minute).padStart(2, "0");
       } else {
@@ -174,7 +174,7 @@
   <div class="wtb-rows" style="position: relative">
     {#each zones as p, i (p.id)}
       {@const isAnchor = i === 0}
-      {@const cells = buildCells(p)}
+      {@const cells = buildCells(p, anchorDate, h24)}
       {@const nowLocal = partsInZone(now, p.tz)}
       {@const nowStr = formatHour(nowLocal.hour + nowLocal.minute / 60, h24)}
       {@const offMin = offsetMinutes(now, p.tz)}
