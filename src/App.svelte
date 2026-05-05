@@ -22,15 +22,21 @@
   let nowTimer: ReturnType<typeof setInterval>;
   let hydrated = false;
 
-  // Encode a Zone as a single compact URL-safe segment.
+  // Encode a Zone as a single compact segment. URLSearchParams handles its own
+  // percent-encoding when the params are serialized — so we must NOT encode
+  // values here, otherwise the `%` characters get re-encoded as `%25` and the
+  // URL ends up with `%2520` instead of `%20`. We just sanitize the separator.
   // Format: name~city~tz~color~workStart~workEnd
   function encodeZone(p: Zone): string {
     return [p.name, p.city, p.tz, p.color, p.workStart, p.workEnd]
-      .map((v) => encodeURIComponent(String(v)))
+      .map((v) => String(v).replace(/~/g, ""))
       .join("~");
   }
   function decodeZone(seg: string): Zone | null {
+    // URLSearchParams.getAll already returns decoded values. But older URLs may
+    // contain double-encoded values — be tolerant and decode if needed.
     const parts = seg.split("~").map((v) => {
+      if (v.indexOf("%") === -1) return v;
       try {
         return decodeURIComponent(v);
       } catch {
@@ -227,6 +233,7 @@
         selectedDurationH={duration}
         on:seek={(e) => (selectedStartUTC = e.detail)}
         on:shiftDay={(e) => shiftDate(e.detail)}
+        on:resize={(e) => (tweaks = { ...tweaks, duration: e.detail })}
       />
     </main>
   </div>
