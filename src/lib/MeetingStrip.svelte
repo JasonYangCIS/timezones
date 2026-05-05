@@ -46,15 +46,23 @@
           .map((s) => s[0])
           .join("")
           .toUpperCase();
-        // Always render the chip time as zero-padded HH:MM (regardless of the
-        // user's 12h/24h preference for other surfaces) so chip widths are
-        // identical across zones and the strip doesn't shift on selection.
-        const padded =
-          String(sLocal.hour).padStart(2, "0") + ":" + String(sLocal.minute).padStart(2, "0");
+        // Render the chip time in the user's preferred 12h/24h format, but
+        // always zero-pad the hour AND always show minutes so every chip is
+        // the same width — keeps the strip from reflowing when you drag the
+        // selection.
+        const mm = String(sLocal.minute).padStart(2, "0");
+        let padded: string;
+        if (h24) {
+          padded = String(sLocal.hour).padStart(2, "0") + ":" + mm;
+        } else {
+          const ampm = sLocal.hour < 12 ? "am" : "pm";
+          const h12 = sLocal.hour % 12 || 12;
+          padded = String(h12).padStart(2, "0") + ":" + mm + ampm;
+        }
         return {
           zone: p,
           timeStr: padded,
-          // Keep the localized form for tooltips / accessibility.
+          // Keep the loose localized form for tooltips / accessibility.
           timeStrLocalized: formatHour(startHour, h24),
           short: initials,
           band,
